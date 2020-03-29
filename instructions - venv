@@ -1,0 +1,43 @@
+How to use virtual environment (venv) ? 
+
+To install pip - 
+$ python3 -m venv envname
+will create a directory named envname which will include all the virtual environment. 
+
+
+To start the venv - 
+cd to the directory of the project. (named storage) 
+and then type the command - 
+$ source env/bin/activate 
+
+
+This will start the virtual environment - 
+(env) idan@idan-X540LA:~/python/storage$
+
+To check that the python refers to the version in the vitual environment - 
+which python3 
+will output a path for a binary at the venv - 
+		(env) idan@idan-X540LA:~/python/storage$ which python
+		/home/idan/python/storage/env/bin/python
+
+
+To stop the venv - 
+$ deactivate
+		(env) idan@idan-X540LA:~/python/storage$ deactivate
+		idan@idan-X540LA:~/python/storage$ 
+
+
+
+
+How to manage packages? 
+Inside the venv - use pip, in my case pip3 for python3 . 
+
+pip install packagename #Will install package named packagename
+pip list #Will show packages list. 
+
+
+
+
+
+References - 
+https://realpython.com/python-virtual-environments-a-primer/
