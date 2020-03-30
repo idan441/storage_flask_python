@@ -1,0 +1,42 @@
+Storage application db scheme - db is SQLite 
+Items - 
+	item_id
+	name
+	price
+  	amount
+	warehouse_id
+
+warehouses - 
+	wh_id
+	name
+	is_active
+
+users -
+	u_id
+	name
+	is_active
+	is_admin
+	
+
+actions - 
+	a_id
+	item_id
+	u_id
+	amount_added
+	amount_subbed
+	amount_before
+	amount_after
+	wh_id
+ 
+transaction - 
+	t_id
+	title
+	u_id
+	a_id  #action_id
+	reason
+	transaction_time
+	status #done, is canceled, not transacted, draft
+	notes
+	transaction_type #inside, outside
+	supplier_id
+	costumer_id 
