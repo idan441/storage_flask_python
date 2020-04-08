@@ -39,21 +39,32 @@ class dbcon:
 		cur.execute(query)
 		return cur.lastrowid
 
+
+	def update_query_no_where(self, tbl_name, param, values): 
+		return update_query(tbl_name, param, values, [], [])
 	def update_query(self, tbl_name, param, values, where_param, where_value): 
 		if len(param) != len(values) :
 			exit('Error - params != values')
+		if len(where_param) != len(where_values) :
+			exit('Error - where_params != where_values')
+		
 		
 		query = ' UPDATE %s SET ' % (tbl_name)
 		
-		print(param)
-		print(len(param))
-		print("length" , len(param))
-		
+		#Add the updated parameters - 
 		for i in range(len(param)) : 
 			query += ' %s = \'%s\'' % (param[i], values[i])
 			if (i != len(param)-1) : 
 				query += ', '
-			print(i)
+	
+		#Add the where clause, if where_param and where_value are set) 
+		if(where_param != 0):
+			query += " WHERE " 
+			for i in range(len(param)) : 
+				query += ' %s = \'%s\'' % (param[i], values[i])
+				if (i != len(param)-1) : 
+					query += ', '
+				print(i)
 
 		print(query)
 		cur = self.conn.cursor()
