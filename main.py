@@ -23,9 +23,20 @@ def show_warehouse_page():
 def add_warehouse_page():
    return 'add warehouse page! '
 
+@app.route('/warehouse/update/<wh_id>')
+def add_warehouse_page():
+   return 'add warehouse page! '
+
+@app.route('/warehouse/delete/<wh_id>')
+def add_warehouse_page():
+   return 'add warehouse page! '
+
+
+
+
 @app.route('/users/')
 @app.route('/users/list')
-def add_warehouse_page():
+def users_list_page():
    return 'add warehouse page! '
 
 
@@ -34,4 +45,4 @@ def add_warehouse_page():
 
 
 if __name__ == '__main__':
-   app.run( debug=True)
+   app.run( debug=True )

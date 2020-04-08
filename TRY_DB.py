@@ -13,3 +13,5 @@ conn.execute('''CREATE TABLE warehouses
 		         is_active      INT     NOT NULL)
 				''')
 print("Table 'warehouse' created successfully")
+
+
