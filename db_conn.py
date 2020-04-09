@@ -6,14 +6,14 @@ from sqlite3 import Error #import the error module, used in the create_conn func
 import logging #For the abillity to add logs in the terminal
 
 
-class dbcon: 
+class db_conn: 
 
-	conn = sqlite3.connect(r'./test.db')
+	conn = sqlite3.connect(r'./test.db', check_same_thread=False)
 
 	def open_conn(self):
 		#Connects to the database, if fails then abort the software. 
 		try:
-			self.conn = sqlite3.connect('test.db')
+			self.conn = sqlite3.connect('test.db', check_same_thread=False)
 		except Error as e:
 			logging.error("connection to the sqlite failed! ")
 			print(e)
@@ -39,23 +39,7 @@ class dbcon:
 		cur.execute(query)
 		return cur.lastrowid
 
-	def update_query(self, tbl_name, param, values, where_param, where_value): 
-		if len(param) != len(values) :
-			exit('Error - params != values')
-		
-		query = ' UPDATE %s SET ' % (tbl_name)
-		
-		print(param)
-		print(len(param))
-		print("length" , len(param))
-		
-		for i in range(len(param)) : 
-			query += ' %s = \'%s\'' % (param[i], values[i])
-			if (i != len(param)-1) : 
-				query += ', '
-			print(i)
-
-		print(query)
+	def execute_query(self, query): 
 		cur = self.conn.cursor()
 		cur.execute(query)
 
@@ -72,36 +56,19 @@ class dbcon:
 		cur = self.conn.cursor()
 		cur.execute(query)
 
-	def rollback(self): 
-		#Cancel the previous queries before the latest commit. (or from the start of the code. ) 
-		#The opposite of commit. 
-		query = ' rollback; ' 
-		cur = self.conn.cursor()
-		cur.execute(query)
 
 
-#Create tables: 
-def build_db():
-	db.conn.execute('''CREATE TABLE warehouses 
-					(wh_id		INTEGER		PRIMARY KEY,
-					wh_name	TEXT	NOT NULL,
-					is_active	INT		NOT NULL)
-					''')
-	print("Table 'warehouses' created successfully")
+# #Example codes for testing
+# db = db_conn()
+# #build_db()
+# db.open_conn()
+# str = db.insert_query("warehouses",['wh_name','is_active'], ['main','1'])
+# print(str)
+# db.commit()
 
-
-
-
-db = dbcon()
-#build_db()
-db.open_conn()
-str = db.insert_query("warehouses",['wh_name','is_active'], ['main','1'])
-print(str)
-db.commit()
-
-db.update_query("warehouses", ["wh_name"], ["mainnn"])
-
-print(db.select_query("select * from warehouses"))
+# db.execute_query("DELETE FROM warehouses")
+# db.commit()
+# print(db.select_query("select * from warehouses"))
 
 
 
