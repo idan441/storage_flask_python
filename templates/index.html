@@ -5,9 +5,8 @@
 	</head>
 	<body>
 
-	{% if page_title is defined %}
-	<h1>{{ page_title }}</h1>
-	{% endif %}
+
+	<h1>Storage system: </h1>
 
 	<ul>
 		<li><a href="/">Main page</a></li>
@@ -17,6 +16,28 @@
 		<li><a href="/users">users</a></li>
 	</ul>
 
+
+
+	{% if page_title is defined %}
+	<h2>{{ page_title }}</h2>
+	{% endif %}
+
+
+
+<h1>Storage system: </h1>
+	{% if message is defined %}
+		<div style="background-color:green;color:white;">
+		{{ message|safe }}
+		</div>
+	{% endif %}
+
+
+	{% if warning is defined %}
+		<div style="background-color:red;color:white;">
+		{{ warning|safe }}
+		</div>
+	{% endif %}
+	
 	<div>
 		{% if content is defined %}
 		{{ content|safe }}
