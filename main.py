@@ -11,6 +11,10 @@ app = Flask(__name__)
 def main_page():
 	return render_template('index.html', page_title="main page")
 
+
+
+
+#Items micro-services: 
 @app.route('/items/')
 @app.route('/items/list')
 def items_list_page():
@@ -45,10 +49,54 @@ def update_item_page():
 	form_notes = request.form["notes"]
 	return render_template('index.html', page_title="Edit item: ", content=items.item_update(form_item_id, form_item_name, form_amount, form_m_unit, form_price, form_supplier_id, form_warehouse_id, form_notes) )		
 
-# @app.route('/items/edit/<item_id>')
-# def shosssssw_item_page(item_id):
-# 	return render_template('index.html', page_title="Edit item: ", content=items.item_edit(item_id) )
 
+
+
+#Transactions and actions micro-services: 
+@app.route('/transactions')
+@app.route('/transactions/list')
+def list_transactions_page(item_id):	
+	return render_template('index.html', page_title="Transactions list: ", content=items.item_edit(item_id) )
+
+@app.route('/transactions/add')
+def add_transaction_page(item_id):	
+	return render_template('index.html', page_title="Add transaction: ", content=items.item_edit(item_id) )
+
+@app.route('/transactions/view/<transaction_id>')
+def view_transaction_page(item_id):
+	#It is for a completed transactions
+	#Viewing a transaction shows information about it - but cannot allow to edit it! 	
+	return render_template('index.html', page_title="View transaction: ", content=items.item_edit(item_id) )
+
+@app.route('/transactions/edit/<transaction_id>')
+def edit_transaction_page(item_id):	
+	#It allows editing transaction, adding actions to it - and eventually to apply it! 
+	return render_template('index.html', page_title="Edit transaction: ", content=items.item_edit(item_id) )
+
+@app.route('/transactions/delete/<transaction_id>')
+def delete_transaction_page(item_id):
+	#transactions are not actually deleted from the db, but actually just changing their status, while updating the storage. 
+	return render_template('index.html', page_title="Delete transaction: ", content=items.item_edit(item_id) )
+
+#Actions are part of transactions, and are added to a transaction. 
+#Actions can only be added, edited or deleted in uncompleted transactions! 
+@app.route('/actions/add/<transaction_id>')
+def add_action_page(item_id):	
+	return render_template('index.html', page_title="Add action: ", content=items.item_edit(item_id) )
+
+@app.route('/actions/edit/<action_id>')
+def edit_action_page(item_id):	
+	return render_template('index.html', page_title="Edit action: ", content=items.item_edit(item_id) )
+
+@app.route('/actions/delete/<action_id>')
+def delete_action_page(item_id):
+	#An action can only be deleted in the transaction is not completed! 
+	return render_template('index.html', page_title="Delete action: ", content=items.item_edit(item_id) )
+
+
+
+
+#Warehouses micro-services: 
 @app.route('/warehouse/')
 @app.route('/warehouse/list')
 def show_warehouse_page():
@@ -79,6 +127,7 @@ def delete_warehouse_page(wh_id):
 
 
 
+#Users micro-services: 
 @app.route('/users/')
 @app.route('/users/list')
 def show_users_page():

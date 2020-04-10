@@ -1,5 +1,5 @@
 Storage application db scheme - db is SQLite 
-Items - 
+Items - V
 	item_id
 	item_name
   	amount
@@ -8,6 +8,13 @@ Items -
 	supplier_id
 	warehouse_id
 	notes
+
+Storage - TO BE ADD IN FUTURE
+	storage_id
+	item_id
+	warehouse_id
+	amount
+	last_update_date
 
 warehouses - V
 	wh_id
@@ -20,25 +27,29 @@ users - V
 	password
 	is_active
 	is_admin
-	
 
 actions - 
-	a_id
+	action_id
 	item_id
-	u_id
+	user_id
+	transaction_id
 	amount_added
 	amount_subbed
 	amount_before
 	amount_after
-	wh_id
+	warehouse_id - NOT TO ADD! 
+	storage_id - TO ADD IN FUTURE... 
+	notes
  
-transaction - 
-	t_id
+transactions - 
+	transaction_id
 	title
-	u_id
-	a_id  #action_id
+	user_id_created - the user id of the creator of the transaction
+	user_id_finished - the user id of the user who finished the transaction
+	used_id_last_status - the last id of the user who changed the transaction status
 	reason
-	transaction_time
+	creation_date
+	transaction_date
 	status #done, is canceled, not transacted, draft
 	notes
 	transaction_type #inside, outside

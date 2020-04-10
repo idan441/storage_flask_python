@@ -33,7 +33,40 @@ conn.execute_query_transaction('''CREATE TABLE items
 				price	INT		NOT NULL, 
 				supplier_id	INT		NOT NULL, 
 				warehouse_id	INT		NOT NULL, 
-				notes	TEXT	NOT NULL)
+				notes	TEXT)
 				''')
 print("Table 'items' created successfully")
+
+
+
+conn.execute_query_transaction('''CREATE TABLE transactions 
+				(transaction_id		INTEGER		PRIMARY KEY,
+				title	TEXT	NOT NULL,
+				user_id	INT		NOT NULL, 
+				reason	TEXT	NOT NULL,
+				creation_date_date	INT		NOT NULL, 
+				transaction_date	INT		NOT NULL, 
+				status	INT		NOT NULL, 
+				notes	TEXT, 
+				transaction_type	INT		NOT NULL, 
+				supplier_id	INT		NOT NULL, 
+				costumer_id	INT		NOT NULL)
+				''')
+print("Table 'transaction' created successfully")
+
+
+
+conn.execute_query_transaction('''CREATE TABLE actions 
+				(actions_id		INTEGER		PRIMARY KEY,
+				item_id	INT		NOT NULL, 
+				user_id	INT		NOT NULL, 
+				transaction_id	INT		NOT NULL, 
+				amount_added	INT		NOT NULL, 
+				amount_subbed	INT		NOT NULL, 
+				amound_before	INT		NOT NULL, 
+				amount_after	INT		NOT NULL, 
+				notes	TEXT)
+				''')
+print("Table 'transaction' created successfully")
+
 
