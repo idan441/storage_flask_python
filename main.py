@@ -2,7 +2,8 @@ from flask import Flask, render_template, request
 
 import wh #WH = warehouses functions
 import users #Users functions
-import db_conn #db connectino class, passed to other modules. 
+import items #items functions
+import db_conn #db connection class, passed to other modules. 
 
 app = Flask(__name__)
 
@@ -13,12 +14,40 @@ def main_page():
 @app.route('/items/')
 @app.route('/items/list')
 def items_list_page():
-	return 'Items list page'
+	return render_template('index.html', page_title="Items list: ", content=items.items_list() )
 
-@app.route('/item/<item_id>')
-def show_item_page():
-	return 'welcome to the main page! '
+@app.route('/items/add', methods=['GET', 'POST'])
+def items_add__page():
+	if(request.method == 'GET'): #In case request method is GET, then lead to the creation form. 
+		return render_template('index.html', page_title="Add item: ", content=items.item_add_form() )
+	elif(request.method == 'POST'): #If request method is POST , then it means the form was sent - then add the item. 
+		form_item_name = request.form["item_name"]
+		form_amount = request.form["amount"]
+		form_m_unit = request.form["m_unit"]
+		form_price = request.form["price"]
+		form_supplier_id = request.form["supplier_id"]
+		form_warehouse_id = request.form["warehouse_id"]
+		form_notes = request.form["notes"]
+		return render_template('index.html', page_title="Add item: ", content=items.item_add(form_item_name, form_amount, form_m_unit, form_price, form_supplier_id, form_warehouse_id, form_notes) )
 
+@app.route('/items/edit/<item_id>', methods=['GET'])
+def edit_item_page(item_id):	
+	return render_template('index.html', page_title="Edit item: ", content=items.item_edit(item_id) )
+@app.route('/items/edit', methods=['POST'])
+def update_item_page():
+	form_item_id = request.form["item_id"]
+	form_item_name = request.form["item_name"]
+	form_amount = request.form["amount"]
+	form_m_unit = request.form["m_unit"]
+	form_price = request.form["price"]
+	form_supplier_id = request.form["supplier_id"]
+	form_warehouse_id = request.form["warehouse_id"]
+	form_notes = request.form["notes"]
+	return render_template('index.html', page_title="Edit item: ", content=items.item_update(form_item_id, form_item_name, form_amount, form_m_unit, form_price, form_supplier_id, form_warehouse_id, form_notes) )		
+
+# @app.route('/items/edit/<item_id>')
+# def shosssssw_item_page(item_id):
+# 	return render_template('index.html', page_title="Edit item: ", content=items.item_edit(item_id) )
 
 @app.route('/warehouse/')
 @app.route('/warehouse/list')

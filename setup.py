@@ -28,9 +28,12 @@ print("Table 'users' created successfully")
 conn.execute_query_transaction('''CREATE TABLE items 
 				(item_id		INTEGER		PRIMARY KEY,
 				item_name	TEXT	NOT NULL,
-				price	INT		NOT NULL, 
 				amount	INT		NOT NULL, 
-				warehouse_id	INT		NOT NULL)
+				m_unit	TEXT	NOT NULL,
+				price	INT		NOT NULL, 
+				supplier_id	INT		NOT NULL, 
+				warehouse_id	INT		NOT NULL, 
+				notes	TEXT	NOT NULL)
 				''')
 print("Table 'items' created successfully")
 

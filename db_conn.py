@@ -37,6 +37,7 @@ class db_conn:
 		print(query)
 		cur = self.conn.cursor()
 		cur.execute(query)
+		self.commit()
 		return cur.lastrowid
 
 	def execute_query(self, query): 

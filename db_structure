@@ -1,10 +1,13 @@
 Storage application db scheme - db is SQLite 
 Items - 
 	item_id
-	name
-	price
+	item_name
   	amount
+  	m_unit
+	price
+	supplier_id
 	warehouse_id
+	notes
 
 warehouses - V
 	wh_id

@@ -29,7 +29,7 @@ def users_list():
 
 def user_add(name, password):
 	#Adds a new warehouse to the warehuoses's list
-	conn.execute_query("INSERT INTO users (u_name, password, is_active, is_admin) VALUES ('%s','%s', 1, 1)" % (name, password))
+	conn.execute_query("INSERT INTO users (u_name, password, is_active, is_admin) VALUES ('%s','%s', 1, 0)" % (name, password))
 	return " new user added! "
 
 def user_edit(u_id):
