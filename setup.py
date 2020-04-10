@@ -1,10 +1,11 @@
 #!/usr/bin/python
 
 #The script creates the tables in the database: 
-from db_conn import dbcon 
+import db_conn
 
+conn = db_conn.db_conn()
 
-db.conn.execute('''CREATE TABLE warehouses 
+conn.execute_query('''CREATE TABLE warehouses 
 				(wh_id		INTEGER		PRIMARY KEY,
 				wh_name	TEXT	NOT NULL,
 				is_active	INT		NOT NULL)
@@ -13,7 +14,7 @@ print("Table 'warehouses' created successfully")
 
 
 
-db.conn.execute('''CREATE TABLE users 
+conn.execute_query('''CREATE TABLE users 
 				(u_id		INTEGER		PRIMARY KEY,
 				u_name	TEXT	NOT NULL,
 				is_active	INT		NOT NULL)
@@ -22,7 +23,7 @@ print("Table 'items' created successfully")
 
 
 
-db.conn.execute('''CREATE TABLE items 
+conn.execute_query('''CREATE TABLE items 
 				(item_id		INTEGER		PRIMARY KEY,
 				item_name	TEXT	NOT NULL,
 				price	INT		NOT NULL

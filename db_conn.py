@@ -40,9 +40,16 @@ class db_conn:
 		return cur.lastrowid
 
 	def execute_query(self, query): 
+		#Execute a query and COMMITS IT! 
 		cur = self.conn.cursor()
 		cur.execute(query)
 		self.commit()
+
+	def execute_query_transaction(self, query): 
+		#Execute a query and NOT commiting it! 
+		#This is useful for a series of transaction. Just don't forget to use commit() function in the end! 
+		cur = self.conn.cursor()
+		cur.execute(query)
 
 	def select_query(self, query): 
 		#select query, returns a 2-dimensional array ("list" in python) with the results. 
