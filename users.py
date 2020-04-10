@@ -4,55 +4,54 @@ import db_conn
 conn = db_conn.db_conn() #Set the connection to the database, this will be used by the following functions. 
 
 def users_list(): 
-	results = conn.select_query("SELECT wh_id, wh_name, is_active FROM warehouses")
+	results = conn.select_query("SELECT u_id, u_name, is_active, is_admin FROM users")
 	content = ""
 	
-	if(len(results)==0): 
-		content += "no warehouses have been added yet! " 
-	else: 
-		content = "<table><th>Id</th><th>name</th><th>activity</th><th>actions</td>"
-		for result in results: 
-			content += "<tr><td>%s</td><td>%s</td><td>%s</td><td><a href=\"/warehouse/delete/%s\">delete</a> | <a href=\"/warehouse/edit/%s\">edit</a></td></tr>" % ( result[0], result[1], result[2], result[0], result[0] )
-		content += "</table>" 
-		content += "count: " + str(len(results))
+	#It is assumed that at least one user is set, for the admin. 
+	content = "<table><th>Id</th><th>name</th><th>activity</th><th>is admin</th><th>actions</td>"
+	for result in results: 
+		content += "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td><a href=\"/users/edit/%s\">edit</a></td></tr>" % ( result[0], result[1], result[2], result[3], result[0] )
+	content += "</table>" 
+	content += "count: " + str(len(results))
 	
 	content += '''<br /><br />
-				<form method="post" action="/warehouse/add">
+				<form method="post" action="/users/add">
 					<table>
-						<tr><td>Warehouse name: </td><td><input type="text" name="wh_name" /></td></tr>
-						<tr><td> Is it active? </td><td><input type="text" name="is_active" /></td></tr>
-						<tr><td colspan="2"><input type="submit" value="add" /></td></tr>
+						<tr><td>User name: </td><td><input type="text" name="u_name" /></td></tr>
+						<tr><td>Password: </td><td><input type="text" name="password" /></td></tr>
+						<tr><td colspan="2"><input type="submit" value="add new user" /></td></tr>
 					</table>
-				</form>'''
+				</form>
+				<br />
+				<p>By default the new user will be active and not an admin. To change it edit the profile manually. </p>
+				'''
 	return content
 
-
-def users_add(name, is_active):
+def user_add(name, password):
 	#Adds a new warehouse to the warehuoses's list
-	conn.execute_query("INSERT INTO warehouses (wh_name, is_active) VALUES ('%s','%s')" % (name, is_active))
-	return " warehouses added! "
+	conn.execute_query("INSERT INTO users (u_name, password, is_active, is_admin) VALUES ('%s','%s', 1, 1)" % (name, password))
+	return " new user added! "
 
-def users_edit(wh_id):
+def user_edit(u_id):
 	#Adds a new warehouse to the warehuoses's list
-	result = conn.select_query_single_row("SELECT wh_id, wh_name, is_active FROM warehouses WHERE wh_id = %s" % (wh_id) )
+	result = conn.select_query_single_row("SELECT u_id, u_name, is_active, is_admin FROM users WHERE u_id = %s" % (u_id) )
 
-	content = '''<form method="post" action="/warehouse/update">
+	content = '''<form method="post" action="/users/update">
 					<table>
-						<tr><td>Warehouse Id: </td><td><input type="hidden" name="wh_id" value="''' + str(result[0]) + '''" />''' + str(result[0]) + '''</td></tr>
-						<tr><td>Warehouse name: </td><td><input type="text" name="wh_name" value="''' + str(result[1]) + '''" /></td></tr>
+						<tr><td>User Id: </td><td><input type="hidden" name="u_id" value="''' + str(result[0]) + '''" />''' + str(result[0]) + '''</td></tr>
+						<tr><td>User name: </td><td><input type="text" name="u_name" value="''' + str(result[1]) + '''" /></td></tr>
 						<tr><td> Is it active? </td><td><input type="text" name="is_active" value="''' + str(result[2]) + '''" /></td></tr>
-						<tr><td colspan="2"><input type="submit" value="Update" /></td></tr>
+						<tr><td> Is it admin? </td><td>''' + str(result[3]) + '''</td></tr>
+						<tr><td colspan="2"><input type="submit" value="Update user" /></td></tr>
 					</table>
-				</form>'''
+				</form>
+				<br />
+				<p>Due to fact that the user might have done archived actions, users cannot be deleted. Instead, you can deactivate them</p>
+				'''
 	return content
 
-def users_update(wh_id, wh_name, is_active):
+def user_update(u_id, u_name, is_active):
 	#Adds a new warehouse to the warehuoses's list
-	conn.execute_query("UPDATE warehouses SET wh_name = '%s' , is_active = '%s' WHERE wh_id = '%s' " % (wh_name, is_active, wh_id))
-	return "Warehouse %s(%s) updated!" % (wh_name, wh_id)
-
-def users_delete(wh_id):
-	#Adds a new warehouse to the warehuoses's list
-	conn.execute_query("DELETE FROM warehouses WHERE wh_id = '%s' " % (wh_id))
-	return " warehouses removed! "
+	conn.execute_query("UPDATE users SET u_name = '%s' , is_active = '%s' WHERE u_id = '%s' " % (u_name, is_active, u_id))
+	return "user %s(%s) updated!" % (u_name, u_id)
 

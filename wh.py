@@ -21,7 +21,7 @@ def wh_list():
 					<table>
 						<tr><td>Warehouse name: </td><td><input type="text" name="wh_name" /></td></tr>
 						<tr><td> Is it active? </td><td><input type="text" name="is_active" /></td></tr>
-						<tr><td colspan="2"><input type="submit" value="add" /></td></tr>
+						<tr><td colspan="2"><input type="submit" value="add new warehouse" /></td></tr>
 					</table>
 				</form>'''
 	return content
@@ -30,7 +30,7 @@ def wh_list():
 def wh_add(name, is_active):
 	#Adds a new warehouse to the warehuoses's list
 	conn.execute_query("INSERT INTO warehouses (wh_name, is_active) VALUES ('%s','%s')" % (name, is_active))
-	return " warehouses added! "
+	return " warehouse added! "
 
 def wh_edit(wh_id):
 	#Adds a new warehouse to the warehuoses's list
@@ -41,7 +41,7 @@ def wh_edit(wh_id):
 						<tr><td>Warehouse Id: </td><td><input type="hidden" name="wh_id" value="''' + str(result[0]) + '''" />''' + str(result[0]) + '''</td></tr>
 						<tr><td>Warehouse name: </td><td><input type="text" name="wh_name" value="''' + str(result[1]) + '''" /></td></tr>
 						<tr><td> Is it active? </td><td><input type="text" name="is_active" value="''' + str(result[2]) + '''" /></td></tr>
-						<tr><td colspan="2"><input type="submit" value="Update" /></td></tr>
+						<tr><td colspan="2"><input type="submit" value="Update warehouse" /></td></tr>
 					</table>
 				</form>'''
 	return content
@@ -53,6 +53,6 @@ def wh_update(wh_id, wh_name, is_active):
 
 def wh_delete(wh_id):
 	#Adds a new warehouse to the warehuoses's list
-	conn.execute_query("DELETE FROM warehouses WHERE wh_id = '%s' " % (wh_id))
+	conn.execute_query("DELETE FROM warehouses WHERE wh_id = '%s' " % (wh_id) )
 	return " warehouses removed! "
 

@@ -6,14 +6,15 @@ Items -
   	amount
 	warehouse_id
 
-warehouses - 
+warehouses - V
 	wh_id
 	name
 	is_active
 
-users -
+users - V
 	u_id
 	name
+	password
 	is_active
 	is_admin
 	

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 
-import wh #WH warehouses functions
+import wh #WH = warehouses functions
+import users #Users functions
 import db_conn #db connectino class, passed to other modules. 
 
 app = Flask(__name__)
@@ -32,7 +33,6 @@ def add_warehouse_page():
 
 @app.route('/warehouse/edit/<wh_id>')
 def edit_warehouse_page(wh_id):
-	#return 'update warehouse page! ' + wh_id
 	return render_template('index.html', page_title="Edit warehuose: " , content=wh.wh_edit(wh_id) )
 
 @app.route('/warehouse/update', methods = ['POST'])
@@ -52,8 +52,25 @@ def delete_warehouse_page(wh_id):
 
 @app.route('/users/')
 @app.route('/users/list')
-def users_list_page():
-	return 'add warehouse page! '
+def show_users_page():
+	return render_template('index.html', page_title="Users list: ", content=users.users_list() )
+
+@app.route('/users/add', methods = ['POST'])
+def add_user_page():
+	form_u_name = request.form["u_name"]
+	form_password = request.form["password"]	
+	return render_template('index.html', page_title="Users list: " , warning=users.user_add(form_u_name, form_password) , content=users.users_list() )
+
+@app.route('/users/edit/<u_id>')
+def edit_user_page(u_id):
+	return render_template('index.html', page_title="Edit user: " , content=users.user_edit(u_id) )
+
+@app.route('/users/update', methods = ['POST'])
+def update_user_page():
+	form_u_id = request.form["u_id"]
+	form_u_name = request.form["u_name"]
+	form_is_active = request.form["is_active"]
+	return render_template('index.html', page_title="Edit user: " , message=users.user_update(form_u_id, form_u_name, form_is_active) , content=users.user_edit(form_u_id) )
 
 
 
