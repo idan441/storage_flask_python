@@ -42,12 +42,25 @@ class db_conn:
 	def execute_query(self, query): 
 		cur = self.conn.cursor()
 		cur.execute(query)
+		self.commit()
 
 	def select_query(self, query): 
 		#select query, returns a 2-dimensional array ("list" in python) with the results. 
 		cur = self.conn.cursor() 
 		cur.execute(query)
 		return cur.fetchall()
+
+	def select_query_single_row(self, query): 
+		#select query, which return a one row results. A query with more then one result or zero - will prompt an error
+		#The result is returned as a list. 
+		cur = self.conn.cursor() 
+		cur.execute(query)
+		results = cur.fetchall()
+		
+		#Check that only one result exists
+		if(len(results) != 1): 
+			return "error - the result of the query is no one result. The num of results is - %s" % (str(len(results)))
+		return results[0]
 
 	def commit(self):
 		#Sends a commit query to the database. Use this ONLY after finished the queries set. 

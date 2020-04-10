@@ -22,26 +22,30 @@ def show_item_page():
 @app.route('/warehouse/')
 @app.route('/warehouse/list')
 def show_warehouse_page():
-	conn = db_conn.db_conn()
-	return render_template('index.html', page_title="Warehouses list: ", content=wh.wh_list(conn) )
+	return render_template('index.html', page_title="Warehouses list: ", content=wh.wh_list() )
 
 @app.route('/warehouse/add', methods = ['POST'])
 def add_warehouse_page():
 	form_wh_name = request.form["wh_name"]
-	form_is_active = request.form["is_active"]
-	conn = db_conn.db_conn()
-	
-	return render_template('index.html', page_title="Warehouses list: " , warning=wh.wh_add(conn, form_wh_name, form_is_active) , content=wh.wh_list(conn) )
+	form_is_active = request.form["is_active"]	
+	return render_template('index.html', page_title="Warehouses list: " , warning=wh.wh_add(form_wh_name, form_is_active) , content=wh.wh_list() )
 
-@app.route('/warehouse/update/<wh_id>')
-def update_warehouse_page(wh_id):
-	return 'update warehouse page! ' + wh_id
+@app.route('/warehouse/edit/<wh_id>')
+def edit_warehouse_page(wh_id):
+	#return 'update warehouse page! ' + wh_id
+	return render_template('index.html', page_title="Edit warehuose: " , content=wh.wh_edit(wh_id) )
+
+@app.route('/warehouse/update', methods = ['POST'])
+def update_warehouse_page():
+	form_wh_id = request.form["wh_id"]
+	form_wh_name = request.form["wh_name"]
+	form_is_active = request.form["is_active"]
+	return render_template('index.html', page_title="Edit warehouse: " , message=wh.wh_update(form_wh_id, form_wh_name, form_is_active) , content=wh.wh_edit(form_wh_id) )
 
 @app.route('/warehouse/delete/<wh_id>')
 def delete_warehouse_page(wh_id):
 	form_wh_id = wh_id
-	conn = db_conn.db_conn()
-	return render_template('index.html', page_title="Warehouses list: " , warning=wh.wh_delete(conn, form_wh_id) , content=wh.wh_list(conn) )
+	return render_template('index.html', page_title="Warehouses list: " , warning=wh.wh_delete(form_wh_id) , content=wh.wh_list() )
 
 
 

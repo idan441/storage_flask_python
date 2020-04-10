@@ -12,6 +12,16 @@ db.conn.execute('''CREATE TABLE warehouses
 print("Table 'warehouses' created successfully")
 
 
+
+db.conn.execute('''CREATE TABLE users 
+				(u_id		INTEGER		PRIMARY KEY,
+				u_name	TEXT	NOT NULL,
+				is_active	INT		NOT NULL)
+				''')
+print("Table 'items' created successfully")
+
+
+
 db.conn.execute('''CREATE TABLE items 
 				(item_id		INTEGER		PRIMARY KEY,
 				item_name	TEXT	NOT NULL,
