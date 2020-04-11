@@ -47,7 +47,7 @@ transactions -
 	title
 	user_id_created - the user id of the creator of the transaction
 	user_id_finished - the user id of the user who finished the transaction
-	used_id_last_status - the last id of the user who changed the transaction status
+	user_id_last_status - the last id of the user who changed the transaction status
 	reason
 	creation_date
 	transaction_date

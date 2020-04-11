@@ -85,19 +85,12 @@ def update_item_page():
 def list_transactions_page():
 	return render_template('index.html', page_title="Transactions list: ", content=transactions.transactions_list() )
 
-@app.route('/transactions/open', methods=['GET', 'POST'])
-def open_transaction_page():
-	if(request.method == 'GET'): #In case request method is GET, then lead to the creation form. 
-		return render_template('index.html', page_title="Add item: ", content=items.item_add_form() )
-	elif(request.method == 'POST'): #If request method is POST , then it means the form was sent - then add the transaction. 
-		form_item_name = request.form["item_name"]
-		form_amount = request.form["amount"]
-		form_m_unit = request.form["m_unit"]
-		form_price = request.form["price"]
-		form_supplier_id = request.form["supplier_id"]
-		form_warehouse_id = request.form["warehouse_id"]
-		form_notes = request.form["notes"]
-		return render_template('index.html', page_title="Add item: ", content=items.item_add(form_item_name, form_amount, form_m_unit, form_price, form_supplier_id, form_warehouse_id, form_notes) )
+@app.route('/transactions/open/<transaction_type>', methods=['GET'])
+def open_transaction_page(transaction_type):
+	if(int(transaction_type) not in [1,2]):
+		return "wrong value, please choose inside (1) or outside (2) "
+	new_transaction_id = transactions.transaction_new(transaction_type)
+	return redirect('/transactions/edit/' + str(new_transaction_id))
 
 @app.route('/transactions/view/<transaction_id>')
 def view_transaction_page(item_id):
@@ -106,9 +99,9 @@ def view_transaction_page(item_id):
 	return render_template('index.html', page_title="View transaction: ", content=items.item_edit(item_id) )
 
 @app.route('/transactions/edit/<transaction_id>')
-def edit_transaction_page(item_id):
+def edit_transaction_page(transaction_id):
 	#It allows editing transaction, adding actions to it - and eventually to apply it! 
-	return render_template('index.html', page_title="Edit transaction: ", content=items.item_edit(item_id) )
+	return render_template('index.html', page_title="Edit transaction: ", content=items.items_list() )
 
 @app.route('/transactions/delete/<transaction_id>')
 def delete_transaction_page(item_id):

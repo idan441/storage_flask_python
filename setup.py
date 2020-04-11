@@ -48,7 +48,7 @@ print("\tTable 'items' created successfully")
 
 conn.execute_query_transaction('''CREATE TABLE transactions 
 				(transaction_id		INTEGER		PRIMARY KEY,
-				title	TEXT	NOT NULL,
+				title	TEXT,
 				user_id_created	INT		NOT NULL,
 				user_id_finished	INT,
 				user_id_last_status	INT		NOT NULL, 
