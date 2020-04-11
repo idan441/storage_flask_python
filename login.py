@@ -1,5 +1,6 @@
 from flask import Flask, session, redirect, url_for, escape, request
 import logging #For the abillity to add logs in the terminal
+import sys #Allows to use the exit() function to abort the code. 
 import db_conn
 app = Flask(__name__)
 
@@ -35,16 +36,21 @@ def logout():
 	return True
 
 
-#Functions used to access user details, by other pages - 
-def get_user_id(u_id): 
-	pass
+#Functions used to access user's session details, by other pages - 
+def get_u_id(): 
+	if(session.get("u_id") is not None): 
+		return session['u_id']
+	logging.error("asked for u_id but this session is not exist")
+	exit("asked for user session details while no user is loged in! function name get_user_id()") 
 
-def get_user_name(u_id): 
-	pass
+def get_d_name(): 
+	if(session.get('d_name') is not None): 
+		return session['d_name']
+	logging.error("asked for d_name but this session is not exist")
+	exit("asked for user session details while no user is loged in! function name get_d_name()") 
 
-def is_user_admin(u_id): 
-	pass
-
-def is_user_active(u_id): 
-	pass
-
+def get_is_admin(): 
+	if(session.get('is_admin') is not None): 
+		return session['is_admin']
+	logging.error("asked for is_admin but this session is not exist")
+	exit("asked for user session details while no user is loged in! function name get_is_admin()") 

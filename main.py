@@ -41,7 +41,6 @@ def logout_page():
 
 
 
-
 #Items micro-services: 
 @app.route('/items/')
 @app.route('/items/list')

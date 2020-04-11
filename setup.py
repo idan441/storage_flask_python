@@ -83,10 +83,12 @@ print("\tTable 'actions' created successfully")
 print("*** Finished creating the database tables *** \n\n")
 
 print("Creating admin user - ")
+print("\tThis user will be used for the first access - remember its details!") 
+print ("\tUse letters and numbers only") 
 print("\t Enter username: ")
-input_username = ""
+input_username = input()
 print("\t ENter password: ")
-input_password = ""
+input_password = input()
 
 ####Put here the query to create the admin user! make sure to set the is_admin = 1 ! 
 
