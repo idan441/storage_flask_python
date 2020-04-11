@@ -85,28 +85,50 @@ def update_item_page():
 def list_transactions_page():
 	return render_template('index.html', page_title="Transactions list: ", content=transactions.transactions_list() )
 
-@app.route('/transactions/open/<transaction_type>', methods=['GET'])
-def open_transaction_page(transaction_type):
+@app.route('/transactions/new/<transaction_type>', methods=['GET'])
+def new_transaction_page(transaction_type):
 	if(int(transaction_type) not in [1,2]):
 		return "wrong value, please choose inside (1) or outside (2) "
 	new_transaction_id = transactions.transaction_new(transaction_type)
 	return redirect('/transactions/edit/' + str(new_transaction_id))
 
 @app.route('/transactions/view/<transaction_id>')
-def view_transaction_page(item_id):
+def view_transaction_page(transaction_id):
 	#It is for a completed transactions
 	#Viewing a transaction shows information about it - but cannot allow to edit it! 	
-	return render_template('index.html', page_title="View transaction: ", content=items.item_edit(item_id) )
+	return render_template('index.html', page_title="View transaction: ", content=transactions.transaction_view(transaction_id) )
 
 @app.route('/transactions/edit/<transaction_id>')
 def edit_transaction_page(transaction_id):
-	#It allows editing transaction, adding actions to it - and eventually to apply it! 
-	return render_template('index.html', page_title="Edit transaction: ", content=items.items_list() )
+	#this page allows editing transaction, adding actions to it - and eventually to apply it! 
+
+	#If information was sent from the form in this page, in order to update the transactino - then try to update it. 
+	#Updating of transaction is reffered using POST method. 
+	if(request.method=='POST'):
+		transactions.transaction_update()
+
+	#In case the equest to the server is with get method, then show the edit form. This form will refer to this same micro-service with POST method in order to update the transaction. 
+	return render_template('index.html', page_title="Edit transaction: ", content=transactions.transaction_edit(transaction_id) )
+
+@app.route('/transactions/update', methods=['POST'])
+def update_transaction_page():
+	#this page allows editing transaction, adding actions to it - and eventually to apply it! 
+	
+	form_transaction_id = request.form["transaction_id"]
+	form_title = request.form["title"]
+	form_reason = request.form["reason"]
+	form_transaction_type = request.form["transaction_type"]
+	form_supplier_id = request.form["supplier_id"]
+	form_costumer_id = request.form["costumer_id"]
+	form_notes = request.form["notes"]
+	
+	transactions.transaction_update(form_transaction_id, form_title, form_reason, form_transaction_type, form_supplier_id, form_costumer_id, form_notes)
+	return redirect('/transactions/edit/' + str(form_transaction_id))
 
 @app.route('/transactions/delete/<transaction_id>')
-def delete_transaction_page(item_id):
+def delete_transaction_page(transaction_id):
 	#transactions are not actually deleted from the db, but actually just changing their status, while updating the storage. 
-	return render_template('index.html', page_title="Delete transaction: ", content=items.item_edit(item_id) )
+	return render_template('index.html', page_title="Delete transaction: ", content=transactions.transaction_delete(transaction_id) )
 
 #Actions are part of transactions, and are added to a transaction. 
 #Actions can only be added, edited or deleted in uncompleted transactions! 

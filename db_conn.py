@@ -61,7 +61,7 @@ class db_conn:
 	def select_query_single_row(self, query): 
 		#select query, which return a one row results. A query with more then one result or zero - will prompt an error
 		#The result is returned as a list. 
-		cur = self.conn.cursor() 
+		cur = self.conn.cursor()
 		cur.execute(query)
 		results = cur.fetchall()
 		

@@ -26,8 +26,8 @@ def transactions_list():
 		content += "count: " + str(len(results))
 	
 	content += '''<br />
-					<a href="/transactions/open/1">Open a new transaction - inside</a>
-					<a href="/transactions/open/2">Open a new transaction - outside</a>
+					<a href="/transactions/new/1">Open a new transaction - inside</a>
+					<a href="/transactions/new/2">Open a new transaction - outside</a>
 				<br />
 				<p>transactions statuses - created (1) , open (2) , finished (3) , canceled (4) , deleted (5) </p>
 				'''
@@ -41,37 +41,44 @@ def transaction_new(transaction_type):
 
 def transaction_edit(transaction_id):
 	#Adds a new warehouse to the warehuoses's list
-	result = conn.select_query_single_row("SELECT item_id, item_name, amount, m_unit, price, supplier_id, warehouse_id, notes FROM items WHERE item_id = '%s' " % (item_id) )
+	result = conn.select_query_single_row('''SELECT transaction_id, title, reason, status, 
+													user_id_created, user_id_finished, user_id_last_status, 
+													creation_date, transaction_date, 
+													transaction_type, 
+													supplier_id, costumer_id, 
+													notes
+											 FROM transactions 
+											 WHERE transaction_id = '%s' ''' % (transaction_id) )
 
-	return '''<form method="post" action="/transactions/edit">
+	return '''<form method="post" action="/transactions/update">
 					<table>
-						<tr><td>Transaction Id: </td><td><input type="hidden" name="item_id" value="''' + str(result[0]) + '''" />''' + str(result[0]) + '''</td></tr>
-						<tr><td>Title: </td><td><input type="text" name="item_name" value="''' + str(result[1]) + '''" /></td></tr>
-						<tr><td>Reason: </td><td><input type="text" name="item_name" value="''' + str(result[1]) + '''" /></td></tr>
-						<tr><td>Status: </td><td><input type="text" name="item_name" value="''' + str(result[1]) + '''" /></td></tr>
+						<tr><td>Transaction Id: </td><td><input type="hidden" name="transaction_id" value="''' + str(result[0]) + '''" />''' + str(result[0]) + '''</td></tr>
+						<tr><td>Title: </td><td><input type="text" name="title" value="''' + str(result[1]) + '''" /></td></tr>
+						<tr><td>Reason: </td><td><input type="text" name="reason" value="''' + str(result[2]) + '''" /></td></tr>
+						<tr><td>Status: </td><td><input type="hidden" name="status" value="''' + str(result[3]) + '''" />''' + str(result[3]) + '''</td></tr>
 						
-						<tr><td>Created by: </td><td><input type="text" name="amount" value="''' + str(result[2]) + '''" /></td></tr>
-						<tr><td>Closed by: </td><td><input type="text" name="m_unit" value="''' + str(result[3]) + '''" /></td></tr>
-						<tr><td>Last user who changed status: </td><td><input type="text" name="price" value="''' + str(result[4]) + '''" /></td></tr>
+						<tr><td>Created by: </td><td>''' + str(result[4]) + '''</td></tr>
+						<tr><td>Closed by: </td><td>''' + str(result[5]) + '''</td></tr>
+						<tr><td>Last user who changed status: </td><td>''' + str(result[6]) + '''</td></tr>
 						
-						<tr><td>Creation date: </td><td><input type="text" name="warehouse_id" value="''' + str(result[5]) + '''" /></td></tr>
-						<tr><td>Transaction date: </td><td><input type="text" name="warehouse_id" value="''' + str(result[5]) + '''" /></td></tr>
+						<tr><td>Creation date: </td><td>''' + str(result[7]) + '''</td></tr>
+						<tr><td>Transaction date: </td><td>''' + str(result[8]) + '''</td></tr>
 						
-						<tr><td>transaction type: </td><td><input type="text" name="warehouse_id" value="''' + str(result[5]) + '''" /></td></tr>
+						<tr><td>transaction type: </td><td><input type="text" name="transaction_type" value="''' + str(result[9]) + '''" /></td></tr>
 
-						<tr><td>Supplier id: </td><td><input type="text" name="warehouse_id" value="''' + str(result[5]) + '''" /></td></tr>
-						<tr><td>Costumer id: </td><td><input type="text" name="supplier_id" value="''' + str(result[6]) + '''" /></td></tr>
+						<tr><td>Supplier id: </td><td><input type="text" name="supplier_id" value="''' + str(result[10]) + '''" /></td></tr>
+						<tr><td>Costumer id: </td><td><input type="text" name="costumer_id" value="''' + str(result[11]) + '''" /></td></tr>
 
-						<tr><td>notes:</td><td><textarea name="notes">''' + str(result[7]) + '''</textarea></td></tr>
+						<tr><td>notes:</td><td><textarea name="notes">''' + str(result[12]) + '''</textarea></td></tr>
 						<tr><td colspan="2"><input type="submit" value="Update Item" /></td></tr>
 					</table>
 				</form>
 				<br />'''
 
-def transaction_update(item_id, item_name, amount, m_unit, price, supplier_id, warehouse_id, notes):
+def transaction_update(transaction_id, title, reason, transaction_type, supplier_id, costumer_id, notes):
 	#Adds a new warehouse to the warehuoses's list
-	conn.execute_query("UPDATE items SET item_name = '%s' , amount = '%s' , m_unit = '%s' , price = '%s' , supplier_id = '%s' , warehouse_id = '%s' , notes = '%s' WHERE item_id = '%s' " % (item_name, amount, m_unit, price, supplier_id, warehouse_id, notes, item_id))
-	return "item %s(%s) updated!" % (item_name, item_id)
+	conn.execute_query("UPDATE transactions SET title = '%s' , reason = '%s' , transaction_type = '%s' , supplier_id = '%s' , costumer_id = '%s' , notes = '%s' , status = 2 WHERE transaction_id = '%s' AND user_id_last_status = %s " % (title, reason, transaction_type, supplier_id, costumer_id, notes, transaction_id, login.get_u_id()) )
+	return 1
 
 def transaction_view():
 	pass
@@ -81,7 +88,8 @@ def transaction_view():
 
 #These function will change transactions status - and change the storage. 
 def transaction_delete(transaction_id):
-	#Only transaction which hasn't been finished or canceled - can be deleted. 
+	#Actually is just take an open transaction and changes its status to deleted (5) . 
+	transaction_cancel(transaction_id)
 	pass
 
 def transaction_cancel(transaction_id):
