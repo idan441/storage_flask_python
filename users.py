@@ -18,6 +18,7 @@ def users_list():
 				<form method="post" action="/users/add">
 					<table>
 						<tr><td>User name: </td><td><input type="text" name="u_name" /></td></tr>
+						<tr><td>Display named </td><td><input type="text" name="d_name" /></td></tr>
 						<tr><td>Password: </td><td><input type="text" name="password" /></td></tr>
 						<tr><td colspan="2"><input type="submit" value="add new user" /></td></tr>
 					</table>
@@ -27,19 +28,20 @@ def users_list():
 				'''
 	return content
 
-def user_add(name, password):
+def user_add(u_name, password, d_name):
 	#Adds a new warehouse to the warehuoses's list
-	conn.execute_query("INSERT INTO users (u_name, password, is_active, is_admin) VALUES ('%s','%s', 1, 0)" % (name, password))
+	conn.execute_query("INSERT INTO users (u_name, password, is_active, is_admin, d_name) VALUES ('%s','%s', 1, 0, '%s')" % (u_name, password, d_name))
 	return " new user added! "
 
 def user_edit(u_id):
 	#Adds a new warehouse to the warehuoses's list
-	result = conn.select_query_single_row("SELECT u_id, u_name, is_active, is_admin FROM users WHERE u_id = %s" % (u_id) )
+	result = conn.select_query_single_row("SELECT u_id, u_name, is_active, is_admin, d_name FROM users WHERE u_id = %s" % (u_id) )
 
 	content = '''<form method="post" action="/users/update">
 					<table>
 						<tr><td>User Id: </td><td><input type="hidden" name="u_id" value="''' + str(result[0]) + '''" />''' + str(result[0]) + '''</td></tr>
 						<tr><td>User name: </td><td><input type="text" name="u_name" value="''' + str(result[1]) + '''" /></td></tr>
+						<tr><td>Display name: </td><td><input type="text" name="d_name" value="''' + str(result[4]) + '''" /></td></tr>
 						<tr><td> Is it active? </td><td><input type="text" name="is_active" value="''' + str(result[2]) + '''" /></td></tr>
 						<tr><td> Is it admin? </td><td>''' + str(result[3]) + '''</td></tr>
 						<tr><td colspan="2"><input type="submit" value="Update user" /></td></tr>
@@ -50,8 +52,8 @@ def user_edit(u_id):
 				'''
 	return content
 
-def user_update(u_id, u_name, is_active):
+def user_update(u_id, u_name, is_active, d_name):
 	#Adds a new warehouse to the warehuoses's list
-	conn.execute_query("UPDATE users SET u_name = '%s' , is_active = '%s' WHERE u_id = '%s' " % (u_name, is_active, u_id))
-	return "user %s(%s) updated!" % (u_name, u_id)
+	conn.execute_query("UPDATE users SET u_name = '%s' , is_active = '%s' , d_name = '%s' WHERE u_id = '%s' " % (u_name, is_active, d_name, u_id))
+	return "user %s (%s, %s) updated!" % (d_name, u_name, u_id)
 

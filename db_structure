@@ -23,7 +23,8 @@ warehouses - V
 
 users - V
 	u_id
-	name
+	d_name #display name
+	u_name #For login form
 	password
 	is_active
 	is_admin
@@ -50,8 +51,8 @@ transactions -
 	reason
 	creation_date
 	transaction_date
-	status #done, is canceled, not transacted, draft
+	status # created (1) , open (2) , finished (3) , canceled (4) , deleted (5) 
 	notes
-	transaction_type #inside, outside
+	transaction_type # inside (1) , outside (2) 
 	supplier_id
 	costumer_id 

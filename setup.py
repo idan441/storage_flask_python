@@ -3,25 +3,32 @@
 #The script creates the tables in the database: 
 import db_conn
 
+
+print("Connecting to the database: ")
+print ("Creating the database")  
 conn = db_conn.db_conn()
 
+
+
+print("Creating database tables - ")
 conn.execute_query_transaction('''CREATE TABLE warehouses 
 				(wh_id		INTEGER		PRIMARY KEY,
 				wh_name	TEXT	NOT NULL,
 				is_active	INT		NOT NULL)
 				''')
-print("Table 'warehouses' created successfully")
+print("\tTable 'warehouses' created successfully")
 
 
 
 conn.execute_query_transaction('''CREATE TABLE users 
 				(u_id		INTEGER		PRIMARY KEY,
+				d_name	TEXT	NOT NULL, 
 				u_name	TEXT	NOT NULL, 
 				password	TEXT	NOT NULL,
 				is_active	INT		NOT NULL,
 				is_admin	INT		NOT NULL)
 				''')
-print("Table 'users' created successfully")
+print("\tTable 'users' created successfully")
 
 
 
@@ -35,24 +42,26 @@ conn.execute_query_transaction('''CREATE TABLE items
 				warehouse_id	INT		NOT NULL, 
 				notes	TEXT)
 				''')
-print("Table 'items' created successfully")
+print("\tTable 'items' created successfully")
 
 
 
 conn.execute_query_transaction('''CREATE TABLE transactions 
 				(transaction_id		INTEGER		PRIMARY KEY,
 				title	TEXT	NOT NULL,
-				user_id	INT		NOT NULL, 
-				reason	TEXT	NOT NULL,
-				creation_date_date	INT		NOT NULL, 
-				transaction_date	INT		NOT NULL, 
+				user_id_created	INT		NOT NULL,
+				user_id_finished	INT,
+				user_id_last_status	INT		NOT NULL, 
+				reason	TEXT,
+				creation_date	TEXT		NOT NULL, 
+				transaction_date	TEXT, 
 				status	INT		NOT NULL, 
 				notes	TEXT, 
 				transaction_type	INT		NOT NULL, 
-				supplier_id	INT		NOT NULL, 
-				costumer_id	INT		NOT NULL)
+				supplier_id	INT, 
+				costumer_id	INT)
 				''')
-print("Table 'transaction' created successfully")
+print("\tTable 'transactions' created successfully")
 
 
 
@@ -67,6 +76,20 @@ conn.execute_query_transaction('''CREATE TABLE actions
 				amount_after	INT		NOT NULL, 
 				notes	TEXT)
 				''')
-print("Table 'transaction' created successfully")
+print("\tTable 'actions' created successfully")
+
+
+
+print("*** Finished creating the database tables *** \n\n")
+
+print("Creating admin user - ")
+print("\t Enter username: ")
+input_username = ""
+print("\t ENter password: ")
+input_password = ""
+
+####Put here the query to create the admin user! make sure to set the is_admin = 1 ! 
+
+print("*** Finished adding the admin user *** \n\n") 
 
 

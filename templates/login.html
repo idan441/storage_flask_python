@@ -15,46 +15,33 @@
 	<h1>Storage system: </h1>
 
 
-
-	<ul>
-		<li><a href="/">Main page</a></li>
-		<li><a href="/warehouse">warehouses</a></li>
-		<li><a href="/items">items</a></li>
-		<li><a href="/users">users</a></li>
-		<li><a href="/transactions">transactions</a></li>
-	</ul>
-
-	{% if session['u_id'] %}
-	hello {{ session['d_name'] }} | <a href="/logout">logout</a>
-	{% else %}
-	<a href="/login">Not connecteed | click here to login</a>
-	{% endif %}
-
-
 	{% if page_title is defined %}
 	<h2>{{ page_title }}</h2>
 	{% endif %}
 
 
 
-<h1>Storage system: </h1>
+<h1>Login: </h1>
 	{% if message is defined %}
 		<div style="background-color:green;color:white;">
 		{{ message|safe }}
 		</div>
 	{% endif %}
 
-
 	{% if warning is defined %}
 		<div style="background-color:red;color:white;">
 		{{ warning|safe }}
 		</div>
 	{% endif %}
-	
+
 	<div>
-		{% if content is defined %}
-		{{ content|safe }}
-		{% endif %}
+		<form action="/login" method="post">
+			<table>
+				<tr><td>Username: </td><td><input type="text" name="username" /></td></tr>
+				<tr><td>Password: </td><td><input type="text" name="password" /></td></tr>
+				<tr><td colspan="2"><input type="submit" value="Login" /></td></tr>
+			</table>
+		</form>
 	</div>
 
 

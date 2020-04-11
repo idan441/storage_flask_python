@@ -67,7 +67,8 @@ class db_conn:
 		
 		#Check that only one result exists
 		if(len(results) != 1): 
-			return "error - the result of the query is no one result. The num of results is - %s" % (str(len(results)))
+			logging.error("error - the result of the query is no one result. The num of results is - %s" % (str(len(results))))
+			return False
 		return results[0]
 
 	def commit(self):
