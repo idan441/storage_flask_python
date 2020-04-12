@@ -66,14 +66,13 @@ print("\tTable 'transactions' created successfully")
 
 
 conn.execute_query_transaction('''CREATE TABLE actions 
-				(actions_id		INTEGER		PRIMARY KEY,
+				(action_id		INTEGER		PRIMARY KEY,
 				item_id	INT		NOT NULL, 
 				user_id	INT		NOT NULL, 
 				transaction_id	INT		NOT NULL, 
-				amount_added	INT		NOT NULL, 
-				amount_subbed	INT		NOT NULL, 
-				amound_before	INT		NOT NULL, 
-				amount_after	INT		NOT NULL, 
+				amount	INT		NOT NULL, 
+				amound_before	INT	, 
+				amount_after	INT	, 
 				notes	TEXT)
 				''')
 print("\tTable 'actions' created successfully")

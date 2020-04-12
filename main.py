@@ -132,18 +132,41 @@ def delete_transaction_page(transaction_id):
 
 #Actions are part of transactions, and are added to a transaction. 
 #Actions can only be added, edited or deleted in uncompleted transactions! 
-@app.route('/actions/add/<transaction_id>')
-def add_action_page(item_id):
-	return render_template('index.html', page_title="Add action: ", content=items.item_edit(item_id) )
+@app.route('/actions/add', methods=['POST'])
+def add_action_page():
+	form_transaction_id = request.form["transaction_id"]
+	form_item_id = request.form["item_id"]
+	form_amount = request.form["amount"]
+	form_notes = request.form["notes"]
+	transactions.add_action(form_transaction_id, form_item_id, form_amount, form_notes)
+	return redirect('/transactions/edit/' + str(form_transaction_id))
 
 @app.route('/actions/edit/<action_id>')
-def edit_action_page(item_id):
-	return render_template('index.html', page_title="Edit action: ", content=items.item_edit(item_id) )
+def edit_action_form_page(action_id):
+	return render_template('index.html', page_title="Edit action: ", content=transactions.edit_action_form(action_id) )
 
-@app.route('/actions/delete/<action_id>')
-def delete_action_page(item_id):
+@app.route('/actions/edit', methods=['POST'])
+def edit_action_page():
+	form_transaction_id = request.form["transaction_id"]
+	form_action_id = request.form["action_id"]
+	form_item_id = request.form["item_id"]
+	form_amount = request.form["amount"]
+	form_notes = request.form["notes"]
+	transactions.edit_action(form_transaction_id, form_item_id, form_amount, form_notes)
+	return redirect('/transactions/edit/' + str(form_transaction_id))
+
+
+@app.route('/actions/remove/<action_id>')
+def delete_action_page(action_id):
 	#An action can only be deleted in the transaction is not completed! 
-	return render_template('index.html', page_title="Delete action: ", content=items.item_edit(item_id) )
+	conn = db_conn.db_conn()
+	transaction_id_raw = conn.select_query_single_row("SELECT transaction_id FROM actions WHERE action_id = %s" % (action_id))
+	transaction_id = transaction_id_raw[0]
+
+	#delete the action - 
+	transactions.remove_action(action_id)
+	
+	return redirect('/transactions/edit/' + str(transaction_id))
 
 
 
