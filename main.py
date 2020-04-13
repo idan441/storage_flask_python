@@ -28,7 +28,7 @@ def login_page():
 		form_username = request.form["username"]
 		form_password = request.form["password"]
 		if(login.login(form_username, form_password)):
-			return render_template('login.html' , message="Login success - go to index page")
+			return redirect('/') #If login success - redirect to main page
 		else:
 			return render_template('login.html' , message="Wrong username or password")
 

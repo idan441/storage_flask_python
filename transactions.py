@@ -168,7 +168,7 @@ def actions_add_form(transaction_id):
 					<table>
 						<tr><td>item: </td><td><select name="item_id">''' % (transaction_id)
 	for result in results:
-		content += 	'''<option value="%s">%s - %s %s</option>''' % (result[0], result[1], result[2], result[3])
+		content += 	'''<option value="%s">%s - available %s %s</option>''' % (result[0], result[1], result[2], result[3])
 	content += '''		</select></td></tr>
 						<tr><td>amount: </td><td><input type="text" name="amount" /></td></tr>
 						<tr><td>notes: </td><td><input type="text" name="notes" /></td></tr>
@@ -203,9 +203,9 @@ def edit_action_form(action_id):
 	items_list = conn.select_query("SELECT item_id, item_name, amount, m_unit FROM items")
 	for item in items_list:
 		if (item[0] == result[2]): #If it is the selected item, then attach "selected" attribute to it. 
-			content += '''<option value="%s">%s - %s %s</option>''' % (item[0], item[1], item[2], item[3])
+			content += '''<option value="%s" selected>%s - available %s %s</option>''' % (item[0], item[1], item[2], item[3])
 		else:
-			content += '''<option value="%s">%s - %s %s</option>''' % (item[0], item[1], item[2], item[3])
+			content += '''<option value="%s">%s - available %s %s</option>''' % (item[0], item[1], item[2], item[3])
 	
 	content += 		'''</select></td></tr>
 						<tr><td>amount: </td><td><input type="text" name="amount" value="%s" /></td></tr>

@@ -71,8 +71,6 @@ conn.execute_query_transaction('''CREATE TABLE actions
 				user_id	INT		NOT NULL, 
 				transaction_id	INT		NOT NULL, 
 				amount	INT		NOT NULL, 
-				amound_before	INT	, 
-				amount_after	INT	, 
 				notes	TEXT)
 				''')
 print("\tTable 'actions' created successfully")
