@@ -2,32 +2,33 @@
 from datetime import date
 import login #User login functions - for accessing the session of the connected user
 import db_conn
+import translate
 
 conn = db_conn.db_conn() #Set the connection to the database, this will be used by the following functions. 
 
 def transactions_list(): 
-	results = conn.select_query("SELECT transaction_id, title, creation_date, transaction_date, status FROM transactions")
+	results = conn.select_query("SELECT transaction_id, title, creation_date, transaction_date, status, transaction_type FROM transactions")
 	content = ""
 	
 	if(len(results)==0): 
 		content += "no transactions have been created yet! " 
 	else: 
 		content = '''<table>
-						<th>Id</th><th>Title</th><th>Creation date</th><th>transaction_date</th><th>status</th>
+						<th>Id</th><th>Title</th><th>Type</th><th>Creation date</th><th>transaction_date</th><th>status</th>
 						<tr>'''
 		for result in results: 
 			if(result[4] == "5"): #status = 5 = transaction is finished and can only be viewed
 				content += "<td><a href=\"/transactions/view/%s\">%s</a></td><td><a href=\"/transactions/view/%s\">%s</a></td>" % (result[0], result[0], result[0], result[1])
 			else: 
 				content += "<td><a href=\"/transactions/edit/%s\">%s</a></td><td><a href=\"/transactions/edit/%s\">%s</a></td>" % (result[0], result[0], result[0], result[1])
-			content += "<td>%s</td><td>%s</td><td>%s</td></tr>" % ( result[2], result[3], result[4] )
+			content += "<td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" % ( translate.transalte_transaction_type(result[5]) ,result[2], result[3], translate.translate_status(result[4]) )
 
 		content += "</table>" 
 		content += "count: " + str(len(results))
 	
 	content += '''<br />
-					<a href="/transactions/new/1">Open a new transaction - inside</a>
-					<a href="/transactions/new/2">Open a new transaction - outside</a>
+					<a href="/transactions/new/1">Open a new transaction - deposit</a>
+					<a href="/transactions/new/2">Open a new transaction - withdraw</a>
 				<br />
 				<p>transactions statuses - created (1) , open (2) , finished (3) , canceled (4) , deleted (5) </p>
 				'''
@@ -56,11 +57,11 @@ def transaction_edit(transaction_id):
 						<tr><td>Transaction Id: </td><td><input type="hidden" name="transaction_id" value="''' + str(result[0]) + '''" />''' + str(result[0]) + '''</td></tr>
 						<tr><td>Title: </td><td><input type="text" name="title" value="''' + str(result[1]) + '''" /></td></tr>
 						<tr><td>Reason: </td><td><input type="text" name="reason" value="''' + str(result[2]) + '''" /></td></tr>
-						<tr><td>Status: </td><td><input type="hidden" name="status" value="''' + str(result[3]) + '''" />''' + str(result[3]) + '''</td></tr>
+						<tr><td>Status: </td><td><input type="hidden" name="status" value="''' + str(result[3]) + '''" />''' + translate.translate_status(result[3]) + '''</td></tr>
 						
-						<tr><td>Created by: </td><td>''' + str(result[4]) + '''</td></tr>
-						<tr><td>Closed by: </td><td>''' + str(result[5]) + '''</td></tr>
-						<tr><td>Last user who changed status: </td><td>''' + str(result[6]) + '''</td></tr>
+						<tr><td>Created by: </td><td>''' + translate.get_user_d_name(result[4]) + '''</td></tr>
+						<tr><td>Closed by: </td><td>''' + translate.get_user_d_name(result[5]) + '''</td></tr>
+						<tr><td>Last user who changed status: </td><td>''' + translate.get_user_d_name(result[6]) + '''</td></tr>
 						
 						<tr><td>Creation date: </td><td>''' + str(result[7]) + '''</td></tr>
 						<tr><td>Transaction date: </td><td>''' + str(result[8]) + '''</td></tr>
@@ -74,7 +75,16 @@ def transaction_edit(transaction_id):
 						<tr><td colspan="2"><input type="submit" value="Update Item" /></td></tr>
 					</table>
 				</form>
-				<br />'''
+				<br />
+
+
+				<a href="/transactions/close/''' + str(result[0]) + '''">Close transaction</a>
+				<a href="/transactions/cancel/''' + str(result[0]) + '''">Cancel transaction</a>
+				<a href="/transactions/delete/''' + str(result[0]) + '''">delete transaction</a>
+				<a href="/transactions/undelete/''' + str(result[0]) + '''">undelete transaction</a>
+
+
+				'''
 	#Print actions list: 
 	content += '''<form method="post" action="/transactions/update">
 					<table>'''
@@ -92,8 +102,8 @@ def transaction_edit(transaction_id):
 	return content
 
 def transaction_update(transaction_id, title, reason, transaction_type, supplier_id, costumer_id, notes):
-	#Adds a new warehouse to the warehuoses's list
-	conn.execute_query("UPDATE transactions SET title = '%s' , reason = '%s' , transaction_type = '%s' , supplier_id = '%s' , costumer_id = '%s' , notes = '%s' , status = 2 WHERE transaction_id = '%s' AND user_id_last_status = %s " % (title, reason, transaction_type, supplier_id, costumer_id, notes, transaction_id, login.get_u_id()) )
+	#UPdate transaction details. This function is activatedby a form sent by transaction_edit() function. 
+	conn.execute_query("UPDATE transactions SET title = '%s' , reason = '%s' , transaction_type = '%s' , supplier_id = '%s' , costumer_id = '%s' , notes = '%s' , status = 2 , user_id_last_status = %s WHERE transaction_id = '%s' " % (title, reason, transaction_type, supplier_id, costumer_id, notes, login.get_u_id(), transaction_id) )
 	return 1
 
 def transaction_view():
@@ -103,22 +113,74 @@ def transaction_view():
 
 
 #These function will change transactions status - and change the storage. 
-def transaction_delete(transaction_id):
-	#Actually is just take an open transaction and changes its status to deleted (5) . 
-	transaction_cancel(transaction_id)
-	pass
-
-def transaction_cancel(transaction_id):
-	#Cancel transaction - only for finished transaction (3) . 
-	pass
-
 def transaction_close(transaction_id):
 	#This function will close the transaction - and will change the items amount. 
-	pass
+	#IMPORTANT - in this function ther is a use with db_conn functions which do not automatically commit the changes! Only at the end of the function, if everything succeded, then a commit will be done! 
+	actions = conn.select_query("SELECT item_id, amount FROM actions WHERE transaction_id = %s " % (transaction_id))
+	transaction = conn.select_query_single_row("SELECT transaction_type, status FROM transactions WHERE transaction_id = %s" %(transaction_id))
+	transaction_type = transaction[0]
+	transaction_status = transaction[1]
 
-def transaction_open(transaction_id):
-	#Can open a closed transaction - while changing the storage - and will return the items. 
-	pass
+	if(transaction_status not in [1,2]):
+		return False
+
+	for action in actions: 
+		if(transaction_type == 1): #This transaction supposed to deposit items to the storage. 
+			conn.execute_query_no_commit("UPDATE items SET amount = amount + %s WHERE item_id = %s " % (action[1], action[0]))
+		elif(transaction_type ==2):  #This transaction supposed to withraw items from the storage. 
+			conn.execute_query_no_commit("UPDATE items SET amount = amount - %s WHERE item_id = %s " % (action[1], action[0]))
+
+	conn.execute_query_no_commit("UPDATE transactions SET status = 3 , user_id_finished = %s WHERE transaction_id = %s " % (login.get_u_id() , transaction_id))
+	conn.commit()
+
+	return True
+
+def transaction_cancel(transaction_id):
+	#Cancel transaction - only for finished transaction (status number = 3) . 
+	#This function actually does the oposite of the transaction_close function. Hence - watch out for the adding and substruction of the itmes from the amount! 
+
+	actions = conn.select_query("SELECT item_id, amount FROM actions WHERE transaction_id = %s " % (transaction_id))
+	transaction = conn.select_query_single_row("SELECT transaction_type, status FROM transactions WHERE transaction_id = %s" %(transaction_id))
+	transaction_type = transaction[0]
+	transaction_status = transaction[1]
+
+	if(transaction_status not in [3]):
+		return False
+
+	for action in actions: 
+		if(transaction_type == 1): #This transaction is for depositing - but in cancel it should ADD BACK THE ITEMS TO THE STORAGE! 
+			conn.execute_query_no_commit("UPDATE items SET amount = amount - %s WHERE item_id = %s " % (action[1], action[0]))
+		elif(transaction_type ==2):  #This transaction is for withrawing - but in cancel it should SUBSTRACT THE ITEMS FROM THE STORAGE! 
+			conn.execute_query_no_commit("UPDATE items SET amount = amount + %s WHERE item_id = %s " % (action[1], action[0]))
+
+	conn.execute_query_no_commit("UPDATE transactions SET status = 4 , user_id_finished = %s WHERE transaction_id = %s " % (login.get_u_id() , transaction_id))
+	conn.commit()
+
+	return True
+
+def transaction_delete(transaction_id):
+	#Actually is just take an open (2) , created (1) or canceled (4) transaction and changes its status to deleted (5) . 
+	#Both statuses are cases where no storage changes have been made! Therefore, just change the transaction_type
+	transaction = conn.select_query_single_row("SELECT status FROM transactions WHERE transaction_id = %s" %(transaction_id))
+	transaction_status = transaction[0]
+
+	if(transaction_status in [1,2,4]):
+		conn.execute_query("UPDATE transactions SET status = 5 , user_id_finished = %s WHERE transaction_id = %s " % (login.get_u_id() , transaction_id))
+		return True
+	else:
+		return False
+
+def transaction_undelete(transaction_id):
+	#Chages transactions's status from delete to open (2) 
+	transaction = conn.select_query_single_row("SELECT status FROM transactions WHERE transaction_id = %s" %(transaction_id))
+	transaction_status = transaction[0]
+
+	if(transaction_status in [5]):
+		conn.execute_query("UPDATE transactions SET status = 2 , user_id_finished = %s WHERE transaction_id = %s " % (login.get_u_id() , transaction_id))
+		return True
+	else:
+		return False
+
 
 
 
@@ -137,7 +199,7 @@ def transaction_open(transaction_id):
 #Actions functions - which will add, edit and delete actions from transactions. 
 def actions_list(transaction_id):
 	results = conn.select_query("SELECT action_id, item_id, amount, user_id, notes FROM actions WHERE transaction_id = %s" % (transaction_id))
-	content = ""
+	content = "<h3>Actions list: </h3>"
 	#Print the table only if actions have been added: 			
 	if(len(results)==0): 
 		content += "no item have been added yet - so no actions can be done! Add items to the transaction in the form below: " 

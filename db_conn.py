@@ -46,7 +46,7 @@ class db_conn:
 		cur.execute(query)
 		self.commit()
 
-	def execute_query_transaction(self, query): 
+	def execute_query_no_commit(self, query): 
 		#Execute a query and NOT commiting it! 
 		#This is useful for a series of transaction. Just don't forget to use commit() function in the end! 
 		cur = self.conn.cursor()

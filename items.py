@@ -18,9 +18,7 @@ def items_list():
 	
 	content += '''<br />
 					<a href="/items/add">Add a new item</a>
-				<br />
-				<p>By default the new user will be active and not an admin. To change it edit the profile manually. </p>
-				'''
+				<br />'''
 	return content
 
 def item_add_form(): 

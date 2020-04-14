@@ -96,6 +96,10 @@ def new_transaction_page(transaction_type):
 def view_transaction_page(transaction_id):
 	#It is for a completed transactions
 	#Viewing a transaction shows information about it - but cannot allow to edit it! 	
+
+	#Until view is available - sned them to edit mode. 
+	return redirect('/transactions/edit/' + str(transaction_id))
+
 	return render_template('index.html', page_title="View transaction: ", content=transactions.transaction_view(transaction_id) )
 
 @app.route('/transactions/edit/<transaction_id>')
@@ -125,10 +129,32 @@ def update_transaction_page():
 	transactions.transaction_update(form_transaction_id, form_title, form_reason, form_transaction_type, form_supplier_id, form_costumer_id, form_notes)
 	return redirect('/transactions/edit/' + str(form_transaction_id))
 
+#These micro-services will change the transaction status, while changing the storage if needed to
+@app.route('/transactions/close/<transaction_id>')
+def close_transaction_page(transaction_id):
+	#Close open transactions, later passing the user to view mode. (Because the transaction is closed and can't be edited anymore. ) 
+	transactions.transaction_close(transaction_id)
+	return redirect('/transactions/view/' + str(transaction_id))
+
+@app.route('/transactions/cancel/<transaction_id>')
+def cancel_transaction_page(transaction_id):
+	#transactions are not actually deleted from the db, but actually just changing their status, while updating the storage. 
+	transactions.transaction_cancel(transaction_id)
+	return redirect('/transactions/view/' + str(transaction_id))
+
 @app.route('/transactions/delete/<transaction_id>')
 def delete_transaction_page(transaction_id):
 	#transactions are not actually deleted from the db, but actually just changing their status, while updating the storage. 
-	return render_template('index.html', page_title="Delete transaction: ", content=transactions.transaction_delete(transaction_id) )
+	transactions.transaction_delete(transaction_id)
+	return redirect('/transactions/view/' + str(transaction_id))
+
+@app.route('/transactions/undelete/<transaction_id>')
+def undelete_transaction_page(transaction_id):
+	#transactions are not actually deleted from the db, but actually just changing their status, while updating the storage. 
+	transactions.transaction_undelete(transaction_id)
+	return redirect('/transactions/edit/' + str(transaction_id))
+
+
 
 #Actions are part of transactions, and are added to a transaction. 
 #Actions can only be added, edited or deleted in uncompleted transactions! 
