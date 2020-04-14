@@ -241,17 +241,34 @@ def actions_add_form(transaction_id):
 
 	return content
 
+#IMPORTANT - Actions can be added, edited or removed only if the transaction is open! ( status created (1) or open (2) ) 
+#That is because in close status (3) the storage has been changed! Also in canceled (4) and deleted (5) status the storage shouldn't change as it is an archived stage. 
+
 def add_action(transaction_id, item_id, amount, notes):
+	#Actions can be edited only if the transaction is open - which means it status is created(1) or open (2) . 
+	if(get_transaction_status(transaction_id) not in [1,2]): 
+		return 0
+
 	user_id = login.get_u_id()
+
 	new_action_id = conn.insert_query("actions", ['item_id', 'user_id', 'transaction_id', 'amount', 'notes'], 
 		[item_id, user_id, transaction_id, amount, notes])
 	return new_action_id
 
 def remove_action(action_id):
+	#Actions can be edited only if the transaction is open - which means it status is created(1) or open (2) . 
+	if(get_transaction_status_from_action_id(action_id) not in [1,2]): 
+		return 0
+
 	conn.execute_query("DELETE FROM actions WHERE action_id = %s" % (action_id))
 	return 1
 
 def edit_action_form(action_id):
+	#Actions can be edited only if the transaction is open - which means it status is created(1) or open (2) . 
+	if(get_transaction_status_from_action_id(action_id) not in [1,2]): 
+		return "The transaction(%s) which this action belongs to is not open. If you want to edit this action - please open this transaction again! " % (get_transaction_status_from_action_id(action_id))
+
+
 	result = conn.select_query_single_row("SELECT action_id, transaction_id, item_id, amount, notes FROM actions WHERE action_id = %s" % (action_id))
 
 	content = '''
@@ -279,7 +296,22 @@ def edit_action_form(action_id):
 	return content
 
 def edit_action(action_id, item_id, amount, notes):
+	#Actions can be edited only if the transaction is open - which means it status is created(1) or open (2) . 
+	if(get_transaction_status_from_action_id(action_id) not in [1,2]): 
+		return 0
+
 	conn.execute_query("UPDATE actions SET item_id = '%s', amount = '%s' , notes = '%s', user_id = '%s' WHERE action_id = %s" %(item_id, amount, notes, str(login.get_u_id()) , action_id))
 	return 1
 
 
+
+
+#Get functions - to get fast details about transactions and actions: 
+def get_transaction_status(transaction_id): 
+	status = conn.select_query_single_row("SELECT status FROM transactions WHERE transaction_id = %s" % (transaction_id))
+	return status[0]
+
+def get_transaction_status_from_action_id(action_id):
+	transaction_id = conn.select_query_single_row("SELECT transaction_id FROM actions WHERE action_id = %s" % (action_id))[0]
+	status = conn.select_query_single_row("SELECT status FROM transactions WHERE transaction_id = %s" % (transaction_id))
+	return status[0]
