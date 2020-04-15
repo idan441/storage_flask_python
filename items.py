@@ -30,7 +30,19 @@ def item_add_form():
 							<tr><td>Amount: </td><td><input type="text" name="amount" /></td></tr>
 							<tr><td>Measurement unit: </td><td><input type="text" name="m_unit" /></td></tr>
 							<tr><td>Price: </td><td><input type="text" name="price" /></td></tr>
-							<tr><td>Warehouse / Location: </td><td><input type="text" name="warehouse_id" /></td></tr>
+							<tr><td>Warehouse / Location: </td><td>
+								<select name="warehouse_id">'''
+
+	#Add ACTIVE warehouses select list: 
+	warehouses_list = conn.select_query("SELECT wh_id, wh_name FROM warehouses WHERE is_active = 1")
+	if(len(warehouses_list) == 0):
+		return "No warehouses are available. You need to have at least 1 active warehouse to relate the item to. Activate or add a new warehouse! " 
+	else:
+		for wh in warehouses_list:
+			content += 			'''<option value="%s">%s</option>''' %(wh[0], wh[1])
+
+	content +=	'''				</select>
+							</td></tr>
 							<tr><td>Supplier: </td><td><input type="text" name="supplier_id" /></td></tr>
 							<tr><td>notes:</td><td><textarea name="notes"></textarea></td></tr>
 							<tr><td colspan="2"><input type="submit" value="add new item" /></td></tr>
@@ -47,20 +59,38 @@ def item_edit(item_id):
 	#Adds a new warehouse to the warehuoses's list
 	result = conn.select_query_single_row("SELECT item_id, item_name, amount, m_unit, price, supplier_id, warehouse_id, notes FROM items WHERE item_id = '%s' " % (item_id) )
 
-	return '''<form method="post" action="/items/edit">
+	content = '''<form method="post" action="/items/edit">
 					<table>
 						<tr><td>Item Id: </td><td><input type="hidden" name="item_id" value="''' + str(result[0]) + '''" />''' + str(result[0]) + '''</td></tr>
 						<tr><td>Item name: </td><td><input type="text" name="item_name" value="''' + str(result[1]) + '''" /></td></tr>
 						<tr><td>Amount: </td><td><input type="text" name="amount" value="''' + str(result[2]) + '''" /></td></tr>
 						<tr><td>Measurement unit: </td><td><input type="text" name="m_unit" value="''' + str(result[3]) + '''" /></td></tr>
 						<tr><td>Price: </td><td><input type="text" name="price" value="''' + str(result[4]) + '''" /></td></tr>
-						<tr><td>Warehouse / Location: </td><td><input type="text" name="warehouse_id" value="''' + str(result[5]) + '''" /></td></tr>
+						<tr><td>Warehouse / Location: </td>
+						<td>
+							<select name="warehouse_id">'''
+
+	#Add ACTIVE warehouses select list: 
+	warehouses_list = conn.select_query("SELECT wh_id, wh_name FROM warehouses WHERE is_active = 1")
+	if(len(warehouses_list) == 0):
+		return "No warehouses are available. You need to have at least 1 active warehouse to relate the item to. Activate or add a new warehouse! " 
+	else:
+		for wh in warehouses_list:
+			if(wh[0] == result[5]):
+				content += 			'''<option value="%s" selected>%s</option>''' %(wh[0], wh[1])
+			else:
+				content += 			'''<option value="%s">%s</option>''' %(wh[0], wh[1])
+
+	content +=		'''		</select>
+						</td></tr>
 						<tr><td>supplier: </td><td><input type="text" name="supplier_id" value="''' + str(result[6]) + '''" /></td></tr>
 						<tr><td>notes:</td><td><textarea name="notes">''' + str(result[7]) + '''</textarea></td></tr>
 						<tr><td colspan="2"><input type="submit" value="Update Item" /></td></tr>
 					</table>
 				</form>
 				<br />'''
+
+	return content
 
 def item_update(item_id, item_name, amount, m_unit, price, supplier_id, warehouse_id, notes):
 	#Adds a new warehouse to the warehuoses's list

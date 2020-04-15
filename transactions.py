@@ -27,7 +27,7 @@ def transactions_list():
 		content += "count: " + str(len(results))
 	
 	content += '''<br />
-					<a href="/transactions/new/1">Open a new transaction - deposit</a>
+					<a href="/transactions/new/1">Open a new transaction - deposit</a><br />
 					<a href="/transactions/new/2">Open a new transaction - withdraw</a>
 				<br />
 				<p>transactions statuses - created (1) , open (2) , finished (3) , canceled (4) , deleted (5) </p>
@@ -66,7 +66,18 @@ def transaction_edit(transaction_id):
 						<tr><td>Creation date: </td><td>''' + str(result[7]) + '''</td></tr>
 						<tr><td>Transaction date: </td><td>''' + str(result[8]) + '''</td></tr>
 						
-						<tr><td>transaction type: </td><td><input type="text" name="transaction_type" value="''' + str(result[9]) + '''" /></td></tr>
+						<tr><td>transaction type: </td><td>'''
+
+	#Print is_active property: 
+	if(int(result[9]) == 1):						
+		content += '''		<input type="radio" name="transaction_type" value="1" checked><label for="1">Deposit </label><br />
+							<input type="radio" name="transaction_type" value="0"><label for="0">Withdraw </label>'''
+	else:
+		content += '''		<input type="radio" name="transaction_type" value="1"><label for="1">Deposit </label><br />
+							<input type="radio" name="transaction_type" value="0" checked><label for="0">Withdraw </label>'''
+
+	content += 		 '''</td></tr>
+
 
 						<tr><td>Supplier id: </td><td><input type="text" name="supplier_id" value="''' + str(result[10]) + '''" /></td></tr>
 						<tr><td>Costumer id: </td><td><input type="text" name="costumer_id" value="''' + str(result[11]) + '''" /></td></tr>
@@ -75,16 +86,7 @@ def transaction_edit(transaction_id):
 						<tr><td colspan="2"><input type="submit" value="Update Item" /></td></tr>
 					</table>
 				</form>
-				<br />
-
-
-				<a href="/transactions/close/''' + str(result[0]) + '''">Close transaction</a>
-				<a href="/transactions/open/''' + str(result[0]) + '''">Open transaction</a>
-				<a href="/transactions/cancel/''' + str(result[0]) + '''">Cancel transaction</a>
-				<a href="/transactions/uncancel/''' + str(result[0]) + '''">Uncancel transaction</a>
-				<a href="/transactions/delete/''' + str(result[0]) + '''">Delete transaction</a>
-				<a href="/transactions/undelete/''' + str(result[0]) + '''">Undelete transaction</a>
-				'''
+				<br />'''
 
 	#Print available transaction status change optios: 
 	content += transactions_status_change_list(transaction_id)

@@ -7,9 +7,9 @@ conn = db_conn.db_conn() #Set the connection to the database, this will be used 
 def users_list(): 
 	results = conn.select_query("SELECT u_id, u_name, is_active, is_admin FROM users")
 	content = ""
-	
+
 	#It is assumed that at least one user is set, for the admin. 
-	content = "<table><th>Id</th><th>name</th><th>activity (Y/N)</th><th>Admin (Y/N)</th><th>actions</td>"
+	content = "<table><th>Id</th><th>name</th><th>activity</th><th>Admin (1/0)</th><th>actions</td>"
 	for result in results: 
 		content += "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td><a href=\"/users/edit/%s\">edit</a></td></tr>" % ( result[0], result[1], translate.translate_active_state(result[2]), result[3], result[0] )
 	content += "</table>" 
