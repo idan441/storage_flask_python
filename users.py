@@ -1,5 +1,6 @@
 #!/bin/python
 import db_conn
+import translate
 
 conn = db_conn.db_conn() #Set the connection to the database, this will be used by the following functions. 
 
@@ -8,9 +9,9 @@ def users_list():
 	content = ""
 	
 	#It is assumed that at least one user is set, for the admin. 
-	content = "<table><th>Id</th><th>name</th><th>activity</th><th>is admin</th><th>actions</td>"
+	content = "<table><th>Id</th><th>name</th><th>activity (Y/N)</th><th>Admin (Y/N)</th><th>actions</td>"
 	for result in results: 
-		content += "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td><a href=\"/users/edit/%s\">edit</a></td></tr>" % ( result[0], result[1], result[2], result[3], result[0] )
+		content += "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td><a href=\"/users/edit/%s\">edit</a></td></tr>" % ( result[0], result[1], translate.translate_active_state(result[2]), result[3], result[0] )
 	content += "</table>" 
 	content += "count: " + str(len(results))
 	
@@ -42,8 +43,26 @@ def user_edit(u_id):
 						<tr><td>User Id: </td><td><input type="hidden" name="u_id" value="''' + str(result[0]) + '''" />''' + str(result[0]) + '''</td></tr>
 						<tr><td>User name: </td><td><input type="text" name="u_name" value="''' + str(result[1]) + '''" /></td></tr>
 						<tr><td>Display name: </td><td><input type="text" name="d_name" value="''' + str(result[4]) + '''" /></td></tr>
-						<tr><td> Is it active? </td><td><input type="text" name="is_active" value="''' + str(result[2]) + '''" /></td></tr>
-						<tr><td> Is it admin? </td><td>''' + str(result[3]) + '''</td></tr>
+						<tr><td>Active: </td><td>'''
+
+	#Print is_active property: 
+	if(int(result[2]) == 1):
+		content += '''		<input type="radio" name="is_active" value="1" checked><label for="1">Active </label><br />
+							<input type="radio" name="is_active" value="0"><label for="0">Not active </label>'''
+	else:
+		content += '''		<input type="radio" name="is_active" value="1"><label for="1">Active </label><br />
+							<input type="radio" name="is_active" value="0" checked><label for="0">Not active </label>'''
+
+	content += 		'''</td></tr>
+						<tr><td>Administrator: </td><td>'''
+
+	#Print is_admin property: 
+	if(int(result[3]) == 1):
+		content += "Yes"
+	else:
+		content += "No"
+
+	content += 		'''</td></tr>
 						<tr><td colspan="2"><input type="submit" value="Update user" /></td></tr>
 					</table>
 				</form>

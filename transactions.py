@@ -7,14 +7,14 @@ import translate
 conn = db_conn.db_conn() #Set the connection to the database, this will be used by the following functions. 
 
 def transactions_list(): 
-	results = conn.select_query("SELECT transaction_id, title, creation_date, transaction_date, status, transaction_type FROM transactions")
+	results = conn.select_query("SELECT transaction_id, title, creation_date, transaction_date, status, transaction_type FROM transactions ORDER BY creation_date DESC, status")
 	content = ""
 	
 	if(len(results)==0): 
 		content += "no transactions have been created yet! " 
 	else: 
 		content = '''<table>
-						<th>Id</th><th>Title</th><th>Type</th><th>Creation date</th><th>transaction_date</th><th>status</th>
+						<th>Id</th><th>Title</th><th>Type</th><th>Creation date</th><th>Transaction date</th><th>status</th>
 						<tr>'''
 		for result in results: 
 			if(result[4] == "5"): #status = 5 = transaction is finished and can only be viewed
@@ -84,9 +84,11 @@ def transaction_edit(transaction_id):
 				<a href="/transactions/uncancel/''' + str(result[0]) + '''">Uncancel transaction</a>
 				<a href="/transactions/delete/''' + str(result[0]) + '''">Delete transaction</a>
 				<a href="/transactions/undelete/''' + str(result[0]) + '''">Undelete transaction</a>
-
-
 				'''
+
+	#Print available transaction status change optios: 
+	content += transactions_status_change_list(transaction_id)
+
 	#Print actions list: 
 	content += '''<form method="post" action="/transactions/update">
 					<table>'''
@@ -205,7 +207,24 @@ def transaction_uncancel(transaction_id):
 	else:
 		return False
 
+def transactions_status_change_list(transaction_id):
+	#The above functinos changes the transactions' status as well as the storages amount. 
+	#In the edit/view 
+	status = get_transaction_status(transaction_id)
+	content = "<h3>Change transaction state: </h3>"
+	if(status in [1,2]): #Transaction is open. 
+		content += '''<a href="/transactions/close/''' + str(transaction_id) + '''">Close transaction</a>
+					<a href="/transactions/delete/''' + str(transaction_id) + '''">Delete transaction</a> ''' # Note that delete transaction is available in stauts 1 ,2 AND 4 ! 
+	elif(status == 3):
+		content += '''<a href="/transactions/open/''' + str(transaction_id) + '''">Open transaction</a>
+					<a href="/transactions/cancel/''' + str(transaction_id) + '''">Cancel transaction</a>'''
+	elif(status == 4):
+		content += '''<a href="/transactions/uncancel/''' + str(transaction_id) + '''">Uncancel transaction</a>
+					<a href="/transactions/delete/''' + str(transaction_id) + '''">Delete transaction</a>'''
+	elif(status == 5):
+		content += '''<a href="/transactions/undelete/''' + str(transaction_id) + '''">Undelete transaction</a>'''
 
+	return content
 
 # actions - 
 # 	action_id

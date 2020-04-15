@@ -5,15 +5,15 @@ import translate
 conn = db_conn.db_conn() #Set the connection to the database, this will be used by the following functions. 
 
 def items_list(): 
-	results = conn.select_query("SELECT item_id, item_name, amount, price, warehouse_id FROM items")
+	results = conn.select_query("SELECT item_id, item_name, amount, price, warehouse_id, m_unit FROM items")
 	content = ""
 	
 	if(len(results)==0): 
 		content += "no items have been created yet! " 
 	else: 
-		content = "<table><th>Id</th><th>name</th><th>amount</th><th>price</th><th>warehouse</th><th>actions</td>"
+		content = "<table><th>Id</th><th>name</th><th>amount</th><th>meas. u.</th><th>price</th><th>warehouse</th><th>actions</td>"
 		for result in results: 
-			content += "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td><a href=\"/items/edit/%s\">edit</a></td></tr>" % ( result[0], result[1], result[2], result[3], translate.get_warehouse_name(result[4]), result[0] )
+			content += "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td><a href=\"/items/edit/%s\">edit</a></td></tr>" % ( result[0], result[1], result[2], result[5], result[3], translate.get_warehouse_name(result[4]), result[0] )
 		content += "</table>" 
 		content += "count: " + str(len(results))
 	

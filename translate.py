@@ -12,25 +12,25 @@ conn = db_conn.db_conn() #Set the connection to the database, this will be used 
 def get_user_u_name(user_id):
 	u_name = conn.select_query_single_row("SELECT u_name FROM users WHERE u_id = '%s' " % (user_id))
 	if (u_name == False): 
-		return "wrong id - no username"
+		return "wrong id - no username" + str(user_id)
 	return u_name[0]
 
 def get_user_d_name(user_id):
 	result = conn.select_query_single_row("SELECT d_name FROM users WHERE u_id = '%s' " % (user_id))
 	if (result == False): 
-		return "wrong id - no display name"
+		return "wrong id - no display name" + str(user_id)
 	return result[0]
 
 def get_user_is_active(user_id):
 	result = conn.select_query_single_row("SELECT is_active FROM users WHERE u_id = '%s' " % (user_id))
 	if (result == False): 
-		return "wrong id - unable to locate whether user is active"
+		return "wrong id - unable to locate whether user is active" + str(user_id)
 	return result[0]
 
 def get_user_is_admin(user_id):
 	result = conn.select_query_single_row("SELECT is_admin FROM users WHERE u_id = '%s' " % (user_id))
 	if (result == False): 
-		return "wrong id - unable to locate whether user is admin"
+		return "wrong id - unable to locate whether user is admin" + str(user_id)
 	return result[0]
 
 
@@ -80,7 +80,7 @@ def translate_status(status_code):
 	if(status_code in status_dictionary):
 		return status_dictionary[status_code] + ("(%s)" % (status_code))
 	else:
-		return "wrong status code"
+		return "wrong status code" + str(status_code)
 
 def transalte_transaction_type(transaction_type):
 	#Translates the transaction_type of a transaction - to its title. 
@@ -89,5 +89,16 @@ def transalte_transaction_type(transaction_type):
 	if(transaction_type in status_dictionary):
 		return status_dictionary[transaction_type] + ("(%s)" % (transaction_type))
 	else:
-		return "wrong transaction type"
+		return "wrong transaction type" + str(transaction_type)
+
+
+#Is_active function - relevant for some modules. 
+def translate_active_state(is_active_state):
+	#Translates the transaction_type of a transaction - to its title. 
+	#transactions statuses - deposit (1) , withdraw (2)
+	active_dictionary = {1:'active', 0:'unactive'}
+	if(is_active_state in active_dictionary):
+		return active_dictionary[is_active_state]
+	else:
+		return "wrong is_active state - optional values are unactive (0) and active (1) . "
 

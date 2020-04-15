@@ -232,11 +232,6 @@ def update_warehouse_page():
 	form_is_active = request.form["is_active"]
 	return render_template('index.html', page_title="Edit warehouse: " , message=wh.wh_update(form_wh_id, form_wh_name, form_is_active) , content=wh.wh_edit(form_wh_id) )
 
-@app.route('/warehouse/delete/<wh_id>')
-def delete_warehouse_page(wh_id):
-	form_wh_id = wh_id
-	return render_template('index.html', page_title="Warehouses list: " , warning=wh.wh_delete(form_wh_id) , content=wh.wh_list() )
-
 
 
 
