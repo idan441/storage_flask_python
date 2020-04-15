@@ -18,6 +18,7 @@ def wh_list():
 		content += "count: " + str(len(results))
 	
 	content += '''<br /><br />
+				<h3>Add a new warehouse: </h3>
 				<form method="post" action="/warehouse/add">
 					<table>
 						<tr><td>Warehouse name: </td><td><input type="text" name="wh_name" /></td></tr>

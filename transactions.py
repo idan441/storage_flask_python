@@ -26,11 +26,15 @@ def transactions_list():
 		content += "</table>" 
 		content += "count: " + str(len(results))
 	
-	content += '''<br />
-					<a href="/transactions/new/1">Open a new transaction - deposit</a><br />
-					<a href="/transactions/new/2">Open a new transaction - withdraw</a>
-				<br />
-				<p>transactions statuses - created (1) , open (2) , finished (3) , canceled (4) , deleted (5) </p>
+	content += '''<br /><br />
+					<h3>Add a new transaction: </h3>
+					<div class="button"><a href="/transactions/new/1">Open a new transaction - deposit</a></div>
+					<div class="button"><a href="/transactions/new/2">Open a new transaction - withdraw</a></div>
+				<br /><br />
+
+				<h4>Key lists: </h4>
+				<p><b>transactions statuses - </b>created (1) , open (2) , finished (3) , canceled (4) , deleted (5) </p>
+				<p><b>transactions types - </b>deposit (1) , withdraw (2) </p>
 				'''
 	return content
 
@@ -71,10 +75,10 @@ def transaction_edit(transaction_id):
 	#Print is_active property: 
 	if(int(result[9]) == 1):						
 		content += '''		<input type="radio" name="transaction_type" value="1" checked><label for="1">Deposit </label><br />
-							<input type="radio" name="transaction_type" value="0"><label for="0">Withdraw </label>'''
+							<input type="radio" name="transaction_type" value="2"><label for="0">Withdraw </label>'''
 	else:
 		content += '''		<input type="radio" name="transaction_type" value="1"><label for="1">Deposit </label><br />
-							<input type="radio" name="transaction_type" value="0" checked><label for="0">Withdraw </label>'''
+							<input type="radio" name="transaction_type" value="2" checked><label for="0">Withdraw </label>'''
 
 	content += 		 '''</td></tr>
 
@@ -215,16 +219,16 @@ def transactions_status_change_list(transaction_id):
 	status = get_transaction_status(transaction_id)
 	content = "<h3>Change transaction state: </h3>"
 	if(status in [1,2]): #Transaction is open. 
-		content += '''<a href="/transactions/close/''' + str(transaction_id) + '''">Close transaction</a>
-					<a href="/transactions/delete/''' + str(transaction_id) + '''">Delete transaction</a> ''' # Note that delete transaction is available in stauts 1 ,2 AND 4 ! 
+		content += '''<div class="button"><a href="/transactions/close/''' + str(transaction_id) + '''">Close transaction</a></div>
+					<div class="button"><a href="/transactions/delete/''' + str(transaction_id) + '''">Delete transaction</a></div> ''' # Note that delete transaction is available in stauts 1 ,2 AND 4 ! 
 	elif(status == 3):
-		content += '''<a href="/transactions/open/''' + str(transaction_id) + '''">Open transaction</a>
-					<a href="/transactions/cancel/''' + str(transaction_id) + '''">Cancel transaction</a>'''
+		content += '''<div class="button"><a href="/transactions/open/''' + str(transaction_id) + '''">Open transaction</a></div>
+					<div class="button"><a href="/transactions/cancel/''' + str(transaction_id) + '''">Cancel transaction</a></div>'''
 	elif(status == 4):
-		content += '''<a href="/transactions/uncancel/''' + str(transaction_id) + '''">Uncancel transaction</a>
-					<a href="/transactions/delete/''' + str(transaction_id) + '''">Delete transaction</a>'''
+		content += '''<div class="button"><a href="/transactions/uncancel/''' + str(transaction_id) + '''">Uncancel transaction</a></div>
+					<div class="button"><a href="/transactions/delete/''' + str(transaction_id) + '''">Delete transaction</a></div>'''
 	elif(status == 5):
-		content += '''<a href="/transactions/undelete/''' + str(transaction_id) + '''">Undelete transaction</a>'''
+		content += '''<div class="button"><a href="/transactions/undelete/''' + str(transaction_id) + '''">Undelete transaction</a></div>'''
 
 	return content
 
