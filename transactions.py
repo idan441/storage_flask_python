@@ -30,7 +30,7 @@ def transactions_list():
 					<h3>Add a new transaction: </h3>
 					<div class="button"><a href="/transactions/new/1">Open a new transaction - deposit</a></div>
 					<div class="button"><a href="/transactions/new/2">Open a new transaction - withdraw</a></div>
-				<br /><br />
+				<br /><br /><br />
 
 				<h4>Key lists: </h4>
 				<p><b>transactions statuses - </b>created (1) , open (2) , finished (3) , canceled (4) , deleted (5) </p>
