@@ -1,5 +1,6 @@
 #!/bin/python
 import db_conn
+import translate
 
 conn = db_conn.db_conn() #Set the connection to the database, this will be used by the following functions. 
 
@@ -12,7 +13,7 @@ def items_list():
 	else: 
 		content = "<table><th>Id</th><th>name</th><th>amount</th><th>price</th><th>warehouse</th><th>actions</td>"
 		for result in results: 
-			content += "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td><a href=\"/items/edit/%s\">edit</a></td></tr>" % ( result[0], result[1], result[2], result[3], result[4], result[0] )
+			content += "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td><a href=\"/items/edit/%s\">edit</a></td></tr>" % ( result[0], result[1], result[2], result[3], translate.get_warehouse_name(result[4]), result[0] )
 		content += "</table>" 
 		content += "count: " + str(len(results))
 	

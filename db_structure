@@ -18,7 +18,7 @@ Storage - TO BE ADD IN FUTURE
 
 warehouses - V
 	wh_id
-	name
+	wh_name
 	is_active
 
 users - V

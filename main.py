@@ -136,11 +136,23 @@ def close_transaction_page(transaction_id):
 	transactions.transaction_close(transaction_id)
 	return redirect('/transactions/view/' + str(transaction_id))
 
+@app.route('/transactions/open/<transaction_id>')
+def open_transaction_page(transaction_id):
+	#Close open transactions, later passing the user to view mode. (Because the transaction is closed and can't be edited anymore. ) 
+	transactions.transaction_open(transaction_id)
+	return redirect('/transactions/edit/' + str(transaction_id))
+
 @app.route('/transactions/cancel/<transaction_id>')
 def cancel_transaction_page(transaction_id):
 	#transactions are not actually deleted from the db, but actually just changing their status, while updating the storage. 
 	transactions.transaction_cancel(transaction_id)
 	return redirect('/transactions/view/' + str(transaction_id))
+
+@app.route('/transactions/uncancel/<transaction_id>')
+def uncancel_transaction_page(transaction_id):
+	#transactions are not actually deleted from the db, but actually just changing their status, while updating the storage. 
+	transactions.transaction_uncancel(transaction_id)
+	return redirect('/transactions/edit/' + str(transaction_id))
 
 @app.route('/transactions/delete/<transaction_id>')
 def delete_transaction_page(transaction_id):

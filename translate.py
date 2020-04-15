@@ -36,11 +36,38 @@ def get_user_is_admin(user_id):
 
 
 #Warehouses table related functions: 
-
+def get_warehouse_name(wh_id):
+	result = conn.select_query_single_row("SELECT wh_name FROM warehouses WHERE wh_id = '%s' " % (wh_id))
+	if (result == False): 
+		return "Warehouse not exist"
+	return result[0]
 
 
 
 #Items table related functions: 
+def get_item_name(item_id):
+	result = conn.select_query_single_row("SELECT item_name FROM items WHERE item_id = '%s' " % (item_id))
+	if (result == False): 
+		return "item not exist"
+	return result[0]
+
+def get_item_amount(item_id):
+	result = conn.select_query_single_row("SELECT amount FROM items WHERE item_id = '%s' " % (item_id))
+	if (result == False): 
+		return "item not exist"
+	return result[0]
+
+def get_item_m_unit(item_id):
+	result = conn.select_query_single_row("SELECT m_unit FROM items WHERE item_id = '%s' " % (item_id))
+	if (result == False): 
+		return "item not exist"
+	return result[0]
+
+def get_item_amount_with_m_unit(item_id):
+	result = conn.select_query_single_row("SELECT amount, m_unit FROM items WHERE item_id = '%s' " % (item_id))
+	if (result == False): 
+		return "item not exist"
+	return str(result[0]) + " " + str(result[1])
 
 
 

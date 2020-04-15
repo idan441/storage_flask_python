@@ -79,9 +79,11 @@ def transaction_edit(transaction_id):
 
 
 				<a href="/transactions/close/''' + str(result[0]) + '''">Close transaction</a>
+				<a href="/transactions/open/''' + str(result[0]) + '''">Open transaction</a>
 				<a href="/transactions/cancel/''' + str(result[0]) + '''">Cancel transaction</a>
-				<a href="/transactions/delete/''' + str(result[0]) + '''">delete transaction</a>
-				<a href="/transactions/undelete/''' + str(result[0]) + '''">undelete transaction</a>
+				<a href="/transactions/uncancel/''' + str(result[0]) + '''">Uncancel transaction</a>
+				<a href="/transactions/delete/''' + str(result[0]) + '''">Delete transaction</a>
+				<a href="/transactions/undelete/''' + str(result[0]) + '''">Undelete transaction</a>
 
 
 				'''
@@ -130,7 +132,7 @@ def transaction_close(transaction_id):
 		elif(transaction_type ==2):  #This transaction supposed to withraw items from the storage. 
 			conn.execute_query_no_commit("UPDATE items SET amount = amount - %s WHERE item_id = %s " % (action[1], action[0]))
 
-	conn.execute_query_no_commit("UPDATE transactions SET status = 3 , user_id_finished = %s WHERE transaction_id = %s " % (login.get_u_id() , transaction_id))
+	conn.execute_query_no_commit("UPDATE transactions SET status = 3 , user_id_finished = %s , transaction_date = '%s' WHERE transaction_id = %s " % (login.get_u_id(), date.today().strftime("%d/%m/%Y") , transaction_id))
 	conn.commit()
 
 	return True
@@ -158,6 +160,17 @@ def transaction_cancel(transaction_id):
 
 	return True
 
+def transaction_open(transaction_id):
+	#Open a transaction. 
+	#Only finished transactions can be opened again. This requires to change the storage amounts back. 
+	if(get_transaction_status(transaction_id) not in [3]):
+		return 0
+
+	#What I am actually doing is canceling the transaction which returns the storages back to its fromer amout. Then I uncancel the transaction which chnages its status back to open (2) . 
+	transaction_cancel(transaction_id)
+	transaction_uncancel(transaction_id)
+	return 1
+
 def transaction_delete(transaction_id):
 	#Actually is just take an open (2) , created (1) or canceled (4) transaction and changes its status to deleted (5) . 
 	#Both statuses are cases where no storage changes have been made! Therefore, just change the transaction_type
@@ -171,7 +184,7 @@ def transaction_delete(transaction_id):
 		return False
 
 def transaction_undelete(transaction_id):
-	#Chages transactions's status from delete to open (2) 
+	#Chages transactions's status from delete (5) to open (2) 
 	transaction = conn.select_query_single_row("SELECT status FROM transactions WHERE transaction_id = %s" %(transaction_id))
 	transaction_status = transaction[0]
 
@@ -181,6 +194,16 @@ def transaction_undelete(transaction_id):
 	else:
 		return False
 
+def transaction_uncancel(transaction_id):
+	#Chages transactions's status from canceled (4) to open (2) 
+	transaction = conn.select_query_single_row("SELECT status FROM transactions WHERE transaction_id = %s" %(transaction_id))
+	transaction_status = transaction[0]
+
+	if(transaction_status in [4]):
+		conn.execute_query("UPDATE transactions SET status = 2 , user_id_finished = %s WHERE transaction_id = %s " % (login.get_u_id() , transaction_id))
+		return True
+	else:
+		return False
 
 
 
@@ -207,12 +230,13 @@ def actions_list(transaction_id):
 		content += '''<table>
 						<tr><th>action id</th><th>item id</th><th>amount</th><th>added by</th><th>notes</th><th>actions: </th></tr>'''
 		for result in results: 
-			content +=	 "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td><a href=\"/actions/remove/%s\">delete</a> | <a href=\"/actions/edit/%s\">edit</a></td></tr>" % (result[0], result[1], result[2], result[3], result[4], result[0], result[0])
+			content +=	 "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td><a href=\"/actions/remove/%s\">delete</a> | <a href=\"/actions/edit/%s\">edit</a></td></tr>" % (result[0], translate.get_item_name(result[1]), result[2], translate.get_user_d_name(result[3]), result[4], result[0], result[0])
 		content += '''</table>
-						total lines - ''' + str(len(results))
+						count - ''' + str(len(results))
 	
 	#Add a form to add another action: 
-	content += actions_add_form(transaction_id)
+	if(get_transaction_status(transaction_id) not in [3,4,5]): #Show add actions form only if the transaction is open. 
+		content += actions_add_form(transaction_id)
 
 	return content
 
