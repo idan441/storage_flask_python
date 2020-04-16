@@ -19,17 +19,11 @@ def main_page():
 
 @app.route('/about')
 def about_page():
-	content_about = '''<p>Hello, </p>
-						<p>The Storage System is my first project in Python. </p>
-						<p>It is built with Falsk (and django) and is supossed to be a functional storage system for small businesses or organizations. </p>
-						<p>You can feel free to use it for studying, business or any other use. BE WARN THAT NO GUARNETEE IS GIVEN. Any use of this application is at your own risk. </p>
+	return render_template('about.html', page_title="About: ")
 
-						<br />
-						<p>Best regards, <br />
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Idan. </p>'''
-	return render_template('index.html', content=content_about)
+@app.route('/help')
+def help_page():
+	return render_template('help.html', page_title ="Help: ")
 
 
 

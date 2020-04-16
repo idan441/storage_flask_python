@@ -16,17 +16,18 @@ def users_list():
 	content += "count: " + str(len(results))
 	
 	content += '''<br /><br />
+
+				<h3>Add a new user: </h3>
 				<form method="post" action="/users/add">
 					<table>
 						<tr><td>User name: </td><td><input type="text" name="u_name" /></td></tr>
-						<tr><td>Display named </td><td><input type="text" name="d_name" /></td></tr>
+						<tr><td>Display named: </td><td><input type="text" name="d_name" /></td></tr>
 						<tr><td>Password: </td><td><input type="text" name="password" /></td></tr>
 						<tr><td colspan="2"><input type="submit" value="add new user" /></td></tr>
 					</table>
 				</form>
 				<br />
-				<p>By default the new user will be active and not an admin. To change it edit the profile manually. </p>
-				'''
+				<p>By default the new user will be active and not an admin. To change it edit the profile manually. </p>'''
 	return content
 
 def user_add(u_name, password, d_name):
