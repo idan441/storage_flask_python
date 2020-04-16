@@ -35,6 +35,7 @@ def transactions_list():
 				<h4>Key lists: </h4>
 				<p><b>transactions statuses - </b>created (1) , open (2) , finished (3) , canceled (4) , deleted (5) </p>
 				<p><b>transactions types - </b>deposit (1) , withdraw (2) </p>
+				<p>Need more help about understanding what the meanings of transactions? See the <a href="/help">help page</a></p>
 				'''
 	return content
 

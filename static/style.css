@@ -20,6 +20,10 @@ div.menu h4 {text-align:center;text-decoration:underline;}
 div.main {margin:10px 10px 10px 220px;}
 div.main h2 {margin-left:10px;font-weight:bold;text-decoration:underline;}
 
+#message_box {border:1px solid green;background-color:#b3ffb3;color:black;margin:10px;padding:10px;text-align:center;}
+#warning_box {border:1px solid red;background-color:#ffb3b3;color:black;margin:10px 10px 20px 10px;padding:10px;text-align:center;}
+
+
 div.footer {min-height:100px;}
 
 /* Style buttons */

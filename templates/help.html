@@ -1,0 +1,77 @@
+{% extends "index.html" %}
+
+
+{% block static_html_content %}
+
+<h4>Users: </h4>
+<p>
+	Users are used in order to login the application and do operations. 
+</p>
+<b>Each user has the following proprties are: </b>
+	<ul>
+		<li>User ID - this is automatically assigned by the application in incremented order. </li>
+		<li>User name - which is used to login. </li>
+		<li>Display name - which will be printed on forms and reports. </li>
+		<li>Activity - defines whether the user is active, which means he can access the application. </li>
+		<li>Admin - this user can create and edit other users. There is only one admin user in the application, created at installatino. </li>
+	</ul>
+<p>By default the new user will be active and not an admin. To change it edit the profile manually. </p>
+
+<br /><br />
+
+
+<h4>Transactions and actions: </h4>
+<p>
+	Transaction are the core of the application. A transaction is a "way" of depositing or withdrawing goods to and from the storage. Each transaction includes supplier/consumer details, users who modified the transaction, the items and their amount and more. 
+</p>
+<h5>Transaction types - </h5>
+<ul>
+	<li>Deposit (1) - These trnsaction will add items to the storage. </li>
+	<li>Withdraw (2) - These transactions will remove items from the storage. </li>
+</ul>
+<h5>Transactino status - </h5>
+<p>
+	Each transaction is assigned a status. The status is being used for two objects: determining whether the transaction has been finished, and for detailing its current stage from being opened until being closed. A closed transaction means a completed transaction, where all storages amounts has been changed accordign to the transaction. 
+</p>
+<ul>
+	<li>created (1) - means the transaction has been opened, and still wasn't updated. (Any update to the transaction's details will change the transaction status to "open" (2) . ) </li>
+	<li>open (2) - this status means that the transaction's details has been updated. (except <u>actions</u> which do not effect the status. ) </li>
+	<li>finished (3) - this means that the transaction is finished. When finishing/closing the transaction the applicatino will change the items' amounts according to the transaction, and ONLY after that the transaction will be closed. ( Meaning, adding the deposited items to storage or removing the item being withdrawn from the storage. ) </li>
+	<li>canceled (4) - this is being used for documentation. Canceled transactions are finished transaction which has been canceled. WHen canceling a transaction the storage is being reverted to its amount as before the transaction was done. </li>
+	<li>deleted (5) - Deleted transactions are transactions which has been deleted. When deleting a transaction, then the transaction will be closed without changing the storage. This is used for documentation, showing that this transaction was created at beginning. </li>
+</ul>
+<h5>The difference between canceled and deleted transactions - </h5>
+<p>
+	To clearlify, both canceled (4) and deleted (5) statuses are acting the same - they cancel the transaction and but keep documenting the transaction in the database. The difference between btoh statuses, is that a canceled transaction means the transaction was done but was canceld due to costumer's request, while deleted transaction is a transaction which shouldn't be done and was made by mistake. 
+</p>
+<p>
+	For example, a transaction of a costumer who bought a product and returned it should be canceled. HOwever, a transaction which was created by mistake by a user should be deleted. 
+</p>
+<p>
+	Both statuses are just for documentation, and you may use them as you wish. 
+</p>
+<p>
+	A note: When wishing to delete a closed transactino (3) , you have to cancel or open it first! This will change its status to open (2) or canceled (4) , and from there you can delete it. )
+</p>
+
+<h5>Actions: </h5>
+<p>
+	Actions are items which should be moved in the transaction. When having an open transaction (status created (1) or open (2) ) you can add, edit or remove actions. Every action represent an item and the desired amount of it which should be moved. 
+</p>
+<p>
+	When finishing/closing a transaction, the application will take all its actions, and will update the storage accordingly. For example, if a transaction is closed and has an action of depositing 2 chairs, then two chairs will be added to the storage. When a transaction is being canceled/re-opened then the storage will be updated as before. 
+</p>
+
+<br /><br />
+
+
+<h4>Reports: </h4>
+<p>
+	It is possible to generate and print reports of the transactions and storage. 
+</p>
+<ul>
+	<li>Storage report - this report shows the current storage, including available items, their amount and their location. This can be used in order to count the storage by the workers. </li>
+	<li>Transaction form - this report is a printable version of a transaction action. </li>
+</ul>
+
+{% endblock %}

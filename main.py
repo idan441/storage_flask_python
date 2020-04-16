@@ -15,7 +15,7 @@ app.secret_key = "any random string" #Used to generate sessions, in the login.py
 
 @app.route('/')
 def main_page():
-	return render_template('index.html', page_title="Main page:")
+	return render_template('main.html', page_title="Main page:")
 
 @app.route('/about')
 def about_page():
@@ -72,6 +72,7 @@ def items_add__page():
 @app.route('/items/edit/<item_id>', methods=['GET'])
 def edit_item_page(item_id):	
 	return render_template('index.html', page_title="Edit item: ", content=items.item_edit(item_id) )
+
 @app.route('/items/edit', methods=['POST'])
 def update_item_page():
 	form_item_id = request.form["item_id"]
@@ -82,7 +83,9 @@ def update_item_page():
 	form_supplier_id = request.form["supplier_id"]
 	form_warehouse_id = request.form["warehouse_id"]
 	form_notes = request.form["notes"]
-	return render_template('index.html', page_title="Edit item: ", content=items.item_update(form_item_id, form_item_name, form_amount, form_m_unit, form_price, form_supplier_id, form_warehouse_id, form_notes) )		
+	if(items.item_update(form_item_id, form_item_name, form_amount, form_m_unit, form_price, form_supplier_id, form_warehouse_id, form_notes)):
+		return render_template('index.html', page_title="Edit item: ", message="Item updated successfully! ", content=items.item_edit(form_item_id) )		
+	return render_template('index.html', page_title="Edit item: ", warning="Item update failed", content=items.item_edit(form_item_id) )		
 
 
 
@@ -226,8 +229,10 @@ def show_warehouse_page():
 @app.route('/warehouse/add', methods = ['POST'])
 def add_warehouse_page():
 	form_wh_name = request.form["wh_name"]
-	form_is_active = request.form["is_active"]	
-	return render_template('index.html', page_title="Warehouses list: " , warning=wh.wh_add(form_wh_name, form_is_active) , content=wh.wh_list() )
+	form_is_active = request.form["is_active"]
+	if(wh.wh_add(form_wh_name, form_is_active)):
+		return render_template('index.html', page_title="Warehouses list: " , message="Warehouse sucessfully added! " , content=wh.wh_list() )
+	return render_template('index.html', page_title="Warehouses list: " , warning="Error - Warehouse wasn't added! " , content=wh.wh_list() )
 
 @app.route('/warehouse/edit/<wh_id>')
 def edit_warehouse_page(wh_id):
@@ -238,7 +243,9 @@ def update_warehouse_page():
 	form_wh_id = request.form["wh_id"]
 	form_wh_name = request.form["wh_name"]
 	form_is_active = request.form["is_active"]
-	return render_template('index.html', page_title="Edit warehouse: " , message=wh.wh_update(form_wh_id, form_wh_name, form_is_active) , content=wh.wh_edit(form_wh_id) )
+	if(wh.wh_update(form_wh_id, form_wh_name, form_is_active)):
+		return render_template('index.html', page_title="Edit warehouse: " , message="Warehouse updated! " , content=wh.wh_edit(form_wh_id) )
+	return render_template('index.html', page_title="Edit warehouse: " , warning="Update failed! " , content=wh.wh_edit(form_wh_id) )
 
 
 
@@ -254,7 +261,7 @@ def add_user_page():
 	form_u_name = request.form["u_name"]
 	form_password = request.form["password"]
 	form_d_name = request.form["d_name"]
-	return render_template('index.html', page_title="Users list: " , warning=users.user_add(form_u_name, form_password, form_d_name) , content=users.users_list() )
+	return render_template('index.html', page_title="Users list: " , message=users.user_add(form_u_name, form_password, form_d_name) , content=users.users_list() )
 
 @app.route('/users/edit/<u_id>')
 def edit_user_page(u_id):
@@ -267,6 +274,15 @@ def update_user_page():
 	form_d_name = request.form["d_name"]
 	form_is_active = request.form["is_active"]
 	return render_template('index.html', page_title="Edit user: " , message=users.user_update(form_u_id, form_u_name, form_is_active, form_d_name) , content=users.user_edit(form_u_id) )
+
+@app.route('/users/change_password', methods = ['POST'])
+def change_user_password_page():
+	form_u_id = request.form["u_id"]
+	form_new_password = request.form["new_password"]
+	if(users.user_change_password(form_u_id, form_new_password)):
+		return render_template('index.html', page_title="Edit user: " , message=" Password changed succesfully! " , content=users.user_edit(form_u_id) )
+	return render_template('index.html', page_title="Edit user: " , warning="Error - Only admin can change password for users! " , content=users.user_edit(form_u_id) )
+
 
 
 

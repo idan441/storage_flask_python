@@ -73,24 +73,24 @@
 
 
 	<div class="main">
-		{% if page_title is defined %}
-		<h2>{{ page_title }}</h2>
-		{% endif %}
-
 
 		{% if message is defined %}
-			<div style="background-color:green;color:white;">
+			<div id="message_box">
 			{{ message|safe }}
 			</div>
 		{% endif %}
 
 
 		{% if warning is defined %}
-			<div style="background-color:red;color:white;">
+			<div id="warning_box">
 			{{ warning|safe }}
 			</div>
 		{% endif %}
 		
+		{% if page_title is defined %}
+		<h2>{{ page_title }}</h2>
+		{% endif %}
+
 		<div>
 			{% if content is defined %}
 			{{ content|safe }}

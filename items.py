@@ -95,6 +95,6 @@ def item_edit(item_id):
 def item_update(item_id, item_name, amount, m_unit, price, supplier_id, warehouse_id, notes):
 	#Adds a new warehouse to the warehuoses's list
 	conn.execute_query("UPDATE items SET item_name = '%s' , amount = '%s' , m_unit = '%s' , price = '%s' , supplier_id = '%s' , warehouse_id = '%s' , notes = '%s' WHERE item_id = '%s' " % (item_name, amount, m_unit, price, supplier_id, warehouse_id, notes, item_id))
-	return "item %s(%s) updated!" % (item_name, item_id)
+	return 1
 
 

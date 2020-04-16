@@ -1,6 +1,7 @@
 #!/bin/python
 import db_conn
 import translate
+import login
 
 conn = db_conn.db_conn() #Set the connection to the database, this will be used by the following functions. 
 
@@ -22,7 +23,7 @@ def users_list():
 					<table>
 						<tr><td>User name: </td><td><input type="text" name="u_name" /></td></tr>
 						<tr><td>Display named: </td><td><input type="text" name="d_name" /></td></tr>
-						<tr><td>Password: </td><td><input type="text" name="password" /></td></tr>
+						<tr><td>Password: </td><td><input type="password" name="password" /></td></tr>
 						<tr><td colspan="2"><input type="submit" value="add new user" /></td></tr>
 					</table>
 				</form>
@@ -69,7 +70,18 @@ def user_edit(u_id):
 				</form>
 				<br />
 				<p>Due to fact that the user might have done archived actions, users cannot be deleted. Instead, you can deactivate them</p>
-				'''
+				
+
+
+				<h3>Change user's password: </h3>
+				<form method="post" action="/users/change_password">
+					<table>
+						<tr><td>User Id: </td><td><input type="hidden" name="u_id" value="''' + str(result[0]) + '''" />''' + str(result[0]) + '''</td></tr>
+						<tr><td>New password: </td><td><input type="password" name="new_password" /></td></tr>
+						<tr><td colspan="2"><input type="submit" value="Change user's password" /></td></tr>
+					</table>
+				</form>'''
+
 	return content
 
 def user_update(u_id, u_name, is_active, d_name):
@@ -77,3 +89,11 @@ def user_update(u_id, u_name, is_active, d_name):
 	conn.execute_query("UPDATE users SET u_name = '%s' , is_active = '%s' , d_name = '%s' WHERE u_id = '%s' " % (u_name, is_active, d_name, u_id))
 	return "user %s (%s, %s) updated!" % (d_name, u_name, u_id)
 
+def user_change_password(u_id, new_password):
+	#This allows changing a user's password. 
+	#ONLY ADMIN CAN CHANGE PASSWORD FOR A USER! 
+	is_admin = login.get_is_admin()
+	if(int(is_admin) == 1):
+		conn.execute_query("UPDATE users SET password = '%s' WHERE u_id = '%s' " % (new_password, u_id))
+		return True
+	return False
