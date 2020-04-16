@@ -6,6 +6,7 @@ import items #items functions
 import transactions #transactions AND actions funcitons
 import db_conn #db connection class, included also in all other modules. 
 import login #Login module, which is up for logging and supplying user credentials after login. 
+import reports #Reports generating functions. 
 
 app = Flask(__name__)
 app.secret_key = "any random string" #Used to generate sessions, in the login.py module. 
@@ -260,6 +261,13 @@ def update_user_page():
 	form_is_active = request.form["is_active"]
 	return render_template('index.html', page_title="Edit user: " , message=users.user_update(form_u_id, form_u_name, form_is_active, form_d_name) , content=users.user_edit(form_u_id) )
 
+
+
+
+#Reports micro-services: 
+@app.route('/reports/storage')
+def report_storage_page():
+	return render_template('index.html', page_title="Storage report: ", content=reports.storage_report() )
 
 
 
