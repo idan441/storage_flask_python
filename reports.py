@@ -9,13 +9,13 @@ conn = db_conn.db_conn() #Set the connection to the database, this will be used 
 
 def storage_report():
 	#Prints a report with all storage, including amounts and warehouse: 
-	items = conn.select_query("SELECT item_id, item_name, m_unit, amount, warehouse_id FROM items")
+	items = conn.select_query("SELECT item_id, item_name, m_unit, amount, warehouse_id, notes FROM items")
 
 	content =   '''<table>
-						<tr><th>Item ID</th><th>Item name</th><th>Amount</th><th>Warehouse / Location</th></tr>'''
+						<tr><th>Item ID</th><th>Item name</th><th>Amount</th><th>Warehouse / Location</th><th>Notes</th></tr>'''
 
 	for item in items:
-		content += '''<tr><td>%s</td><td>%s</td><td>%s %s</td><td>%s</td></tr>''' % (item[0], item[1], item[3], item[2], translate.get_warehouse_name(item[4]))
+		content += '''<tr><td>%s</td><td>%s</td><td>%s %s</td><td>%s</td><td>%s</td></tr>''' % (item[0], item[1], item[3], item[2], translate.get_warehouse_name(item[4]), item[5])
 
 	content += '''</table>
 					Total items on list: ''' + str(len(items)) + ''' 

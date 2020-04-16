@@ -1,4 +1,4 @@
-body {margin:0px;padding:1px;}
+body {background-color:#e6e6e6;margin:0px;padding:1px;}
 table, tr, td, th {border:1px solid black;}
 th {font-weight:bold;text-align:center;}
 td, tr, th {padding:3px;}
@@ -6,18 +6,18 @@ ul {display:block;overflow:auto;}
 li {}
 
 /*Design*/
-div.header {padding:15px;border-bottom:1px solid black;margin-bottom:10px;}
+div.header {padding:15px;border-bottom:1px solid black;background-color:white;margin-bottom:10px;}
 div.header h1 {display:inline;}
 #hyper_box {float:right;padding:3px;margin:3px;}
 div.header a, div.header a:hover {color:grey;}
 
-div.menu {float:left;display:block;overflow:auto;width:200px;padding:2px;border-right:1px solid black;background-color:#e6e6e6;}
+div.menu {float:left;display:block;overflow:auto;width:200px;padding:2px;background-color:#e6e6e6;}
 div.menu div {border:1px solid grey;padding:2px;margin:4px;background-color:white;}
 div.menu a, div.menu a:hover, div.menu a:visited {color:blue;}
 div.menu a:hover {font-weight:bold;}
 div.menu h4 {text-align:center;text-decoration:underline;}
 
-div.main {margin:10px 10px 10px 220px;}
+div.main {margin:10px 10px 10px 220px;background-color:white;border:1px solid black;padding:20px;min-height:90%;}
 div.main h2 {margin-left:10px;font-weight:bold;text-decoration:underline;}
 
 #message_box {border:1px solid green;background-color:#b3ffb3;color:black;margin:10px;padding:10px;text-align:center;}

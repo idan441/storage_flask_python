@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>Storage application</title>
@@ -12,9 +12,9 @@
 			<h1>Storage system: </h1>
 			<div id="hyper_box">
 				{% if session['u_id'] %}
-				hello {{ session['d_name'] }} | <a href="/logout">logout</a>
+				Hello {{ session['d_name'] }} | <a href="/logout">Logout</a>
 				{% else %}
-				<a href="/login">Not connecteed | click here to login</a>
+				<a href="/login">Not connecteed | Click here to login</a>
 				{% endif %}
 			</div>
 		</div>
@@ -103,4 +103,4 @@
 
 
 	</body>
-</html> 
+</html>

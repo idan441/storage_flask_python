@@ -67,7 +67,9 @@ def items_add__page():
 		form_supplier_id = request.form["supplier_id"]
 		form_warehouse_id = request.form["warehouse_id"]
 		form_notes = request.form["notes"]
-		return render_template('index.html', page_title="Add item: ", content=items.item_add(form_item_name, form_amount, form_m_unit, form_price, form_supplier_id, form_warehouse_id, form_notes) )
+
+		new_item_id = items.item_add(form_item_name, form_amount, form_m_unit, form_price, form_supplier_id, form_warehouse_id, form_notes)
+		return render_template('index.html', page_title="Edit item: ", message="New item was added successfully! ", content=items.item_edit(new_item_id) )
 
 @app.route('/items/edit/<item_id>', methods=['GET'])
 def edit_item_page(item_id):	

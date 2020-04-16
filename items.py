@@ -17,9 +17,10 @@ def items_list():
 		content += "</table>" 
 		content += "count: " + str(len(results))
 	
-	content += '''<br />
-					<a href="/items/add">Add a new item</a>
-				<br />'''
+	content += '''<br /><br />
+					<div class="button"><a href="/items/add">Add a new item</a></div>
+				<br /><br />
+				<a href="/reports/storage">storage report</a>'''
 	return content
 
 def item_add_form(): 
@@ -53,7 +54,7 @@ def item_add_form():
 
 def item_add(item_name, amount, m_unit, price, supplier_id, warehouse_id, notes):
 	new_item_id = conn.insert_query("items", ['item_name','amount','m_unit','price','supplier_id','warehouse_id','notes'], [item_name, amount, m_unit, price, supplier_id, warehouse_id, notes])
-	return " new user added! with new id - " + str(new_item_id)
+	return new_item_id
 
 def item_edit(item_id):
 	#Adds a new warehouse to the warehuoses's list
@@ -88,7 +89,11 @@ def item_edit(item_id):
 						<tr><td colspan="2"><input type="submit" value="Update Item" /></td></tr>
 					</table>
 				</form>
-				<br />'''
+				<br />
+				<p>
+					<b>Important - changing item's amount through this form: </b><br />
+					Though you can change the amount of the item in this form, it is recommended to change it using transactions. By using transactions you can document where and who changed the amount. Changing the amount here will be permanent without being able to know when or why the change was done! 
+				</p>'''
 
 	return content
 
