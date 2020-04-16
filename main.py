@@ -15,8 +15,21 @@ app.secret_key = "any random string" #Used to generate sessions, in the login.py
 
 @app.route('/')
 def main_page():
-	return render_template('index.html', page_title="main page")
+	return render_template('index.html', page_title="Main page:")
 
+@app.route('/about')
+def about_page():
+	content_about = '''<p>Hello, </p>
+						<p>The Storage System is my first project in Python. </p>
+						<p>It is built with Falsk (and django) and is supossed to be a functional storage system for small businesses or organizations. </p>
+						<p>You can feel free to use it for studying, business or any other use. BE WARN THAT NO GUARNETEE IS GIVEN. Any use of this application is at your own risk. </p>
+
+						<br />
+						<p>Best regards, <br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Idan. </p>'''
+	return render_template('index.html', content=content_about)
 
 
 

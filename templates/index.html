@@ -2,78 +2,70 @@
 <html>
 	<head>
 		<title>Storage application</title>
-		<style>
-			body {margin:0px;padding:1px;}
-			table, tr, td, th {border:1px solid black;}
-			th {font-weight:bold;text-align:center;}
-			td, tr, th {padding:3px;}
-			ul {display:block;overflow:auto;}
-			li {}
 
-			/*Design*/
-			div.header {background-color:#000066;padding:15px;color:white;}
-			div.menu {float:left;display:block;overflow:auto;width:200px;padding:2px;background-color:#000066;color:white;}
-			div.menu a, div.menu a:hover, div.menu a:visited {color:white;}
-			div.menu a:hover {font-weight:bold;}
-			div.menu h4 {text-align:center;text-decoration:underline;}
-			div.main {margin:10px 10px 10px 220px;}
-			div.main h2 {margin-left:10px;font-weight:bold;text-decoration:underline;}
-			div.footer {min-height:100px;}
-
-			/* Style buttons */
-			div.button {background-color:#000066;min-width:180px;display:inline;color:white;padding:4px;margin:8px;overflow:auto;border-radius:4px;}
-			.button a{text-decoration:none;font-weight:bold;color:white;}
-			.button a:hover{text-decoration:underline;}
-			input[type=submit] {background-color:#000066;min-width:180px;display:block;color:white;padding:4px;margin:8px auto 8px auto;overflow:auto;border-radius:4px;}
-		</style>
-
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	</head>
 	<body>
 
 		<div class="header">
 			<h1>Storage system: </h1>
+			<div id="hyper_box">
+				{% if session['u_id'] %}
+				hello {{ session['d_name'] }} | <a href="/logout">logout</a>
+				{% else %}
+				<a href="/login">Not connecteed | click here to login</a>
+				{% endif %}
+			</div>
 		</div>
 
 		<div class="menu">
 
-			{% if session['u_id'] %}
-			hello {{ session['d_name'] }} | <a href="/logout">logout</a>
-			{% else %}
-			<a href="/login">Not connecteed | click here to login</a>
-			{% endif %}
+			<div>
+				<h4>General: </h4>
+				<ul>
+					<li><a href="/">Main page</a></li>
+					<li><a href="/logout">Logout</a></li>
+				</ul>
+			</div>
 
+			<div>
+				<h4>Shortcuts: </h4>
+				<ul>
+					<li>Open transaction: 
+						<ul>
+							<li><a href="/transactions/new/1">Deposit</a></li>
+							<li><a href="/transactions/new/2">Withdraw</a></li>
+						</ul>
+					</li>
+					<li><a href="/reports/storage">Storage report</a></li>
+				</ul>
+			</div>
 
-			<h4>Actions: </h4>
-			<ul>
-				<li><a href="/">Main page</a></li>
-				<li><a href="/warehouse">warehouses</a></li>
-				<li><a href="/items">items</a></li>
-				<li><a href="/users">users</a></li>
-				<li><a href="/transactions">transactions</a></li>
-			</ul>
+			<div>
+				<h4>Actions: </h4>
+				<ul>
+					<li><a href="/warehouse">Warehouses</a></li>
+					<li><a href="/items">Items</a></li>
+					<li><a href="/users">Users</a></li>
+					<li><a href="/transactions">Transactions</a></li>
+				</ul>
+			</div>
 
-			<h4>Shortcuts: </h4>
-			<ul>
-				<li>Open transaction: 
-					<ul>
-						<li><a href="/">Deposit</a></li>
-						<li><a href="/warehouse">Withdraw</a></li>
-					</ul>
-				</li>
-				<li><a href="/warehouse">Storage report</a></li>
-			</ul>
+			<div>
+				<h4>Reports: </h4>
+				<ul>
+					<li><a href="/reports/storage">Storage report</a></li>
+				</ul>
+			</div>
 
-			<h4>Reports: </h4>
-			<ul>
-				<li><a href="/reports/storage">Storage report</a></li>
-			</ul>
-
-			<h4>Miscellaneus:</h4>
-			<ul>
-				<li><a href="/">About</a></li>
-				<li><a href="/warehouse">Help</a></li>
-			</ul>
+			<div>
+				<h4>Miscellaneus:</h4>
+				<ul>
+					<li><a href="/about">About</a></li>
+					<li><a href="/help">Help</a></li>
+				</ul>
+			</div>
 
 		</div>
 
