@@ -7,7 +7,6 @@ conn = db_conn.db_conn() #Set the connection to the database, this will be used 
 
 def users_list(): 
 	results = conn.select_query("SELECT u_id, u_name, is_active, is_admin FROM users")
-	content = ""
 
 	#It is assumed that at least one user is set, for the admin. 
 	content = "<table><th>Id</th><th>name</th><th>activity</th><th>Admin (1/0)</th><th>actions</td>"

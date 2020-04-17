@@ -7,6 +7,7 @@ import transactions #transactions AND actions funcitons
 import db_conn #db connection class, included also in all other modules. 
 import login #Login module, which is up for logging and supplying user credentials after login. 
 import reports #Reports generating functions. 
+import traders #Traders functions
 
 app = Flask(__name__)
 app.secret_key = "any random string" #Used to generate sessions, in the login.py module. 
@@ -285,6 +286,56 @@ def change_user_password_page():
 		return render_template('index.html', page_title="Edit user: " , message=" Password changed succesfully! " , content=users.user_edit(form_u_id) )
 	return render_template('index.html', page_title="Edit user: " , warning="Error - Only admin can change password for users! " , content=users.user_edit(form_u_id) )
 
+
+
+
+
+#Traders micro-services: 
+@app.route('/traders/')
+@app.route('/traders/list')
+def show_traders_page():
+	return render_template('index.html', page_title="Traders list: ", content=traders.traders_list() )
+
+@app.route('/traders/add', methods = ['GET', 'POST'])
+def add_trader_page():
+	if(request.method == 'POST'): #Adding form was sent - then add the new trader
+		form_t_name = request.form["t_name"]
+		form_contact_name = request.form["contact_name"]
+		form_phone = request.form["phone"]
+		form_address = request.form["address"]
+		form_notes = request.form["notes"]
+		form_is_active = request.form["is_active"]
+		form_is_supplier = request.form["is_supplier"]
+		form_is_costumer = request.form["is_costumer"]
+		
+		new_trader_id = traders.add_trader(form_t_name, form_contact_name, form_phone, form_address, form_notes, form_is_active, form_is_supplier, form_is_costumer)
+		return redirect('/traders/edit/' + str(new_trader_id))
+
+	#If the request is get - then print the add new trader form
+	return render_template('index.html', page_title="Add new trader: " , content=traders.add_trader_form() )
+
+
+@app.route('/traders/edit/<t_id>', methods=['GET', 'POST'])
+def edit_trader_page(t_id):
+	return render_template('index.html', page_title="Edit trader: " , content=traders.trader_edit(t_id) )
+
+@app.route('/traders/update', methods=['POST'])
+def update_trader_page():
+	form_t_id = request.form["t_id"]
+	form_t_name = request.form["t_name"]
+	form_contact_name = request.form["contact_name"]
+	form_phone = request.form["phone"]
+	form_address = request.form["address"]
+	form_notes = request.form["notes"]
+	form_is_active = request.form["is_active"]
+	form_is_supplier = request.form["is_supplier"]
+	form_is_costumer = request.form["is_costumer"]
+	
+	is_success = traders.trader_update(form_t_id, form_t_name, form_contact_name, form_phone, form_address, form_notes, form_is_active, form_is_supplier, form_is_costumer)
+	if(is_success):
+		return render_template('index.html', page_title="Edit trader: ", message="trader details updated! " , content=traders.traders_list() )
+	else:
+		return render_template('index.html', page_title="Edit trader: ", warning="Error - update failed! " , content=traders.trader_edit(form_t_id) )
 
 
 

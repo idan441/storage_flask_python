@@ -77,7 +77,24 @@ print("\tTable 'actions' created successfully")
 
 
 
+conn.execute_query_no_commit('''CREATE TABLE traders 
+				(t_id		INTEGER		PRIMARY KEY,
+				t_name	INT		NOT NULL, 
+				is_active	INT		NOT NULL, 
+				address	INT, 
+				contact_name	INT, 
+				phone	TEXT, 
+				is_supplier	INT		NOT NULL, 
+				is_costumer	INT		NOT NULL, 
+				notes	TEXT 
+				)
+				''')
+print("\tTable 'traders' created successfully")
+
+
 print("*** Finished creating the database tables *** \n\n")
+
+
 
 print("Creating admin user - ")
 print("\tThis user will be used for the first access - remember its details!") 

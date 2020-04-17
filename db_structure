@@ -55,3 +55,14 @@ transactions -
 	transaction_type # inside (1) , outside (2) 
 	supplier_id
 	costumer_id 
+
+traders - 
+	t_id
+	t_name
+	is_active
+	address
+	contact_name
+	phone
+	is_supplier
+	is_costumer
+	notes
