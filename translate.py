@@ -72,6 +72,16 @@ def get_item_amount_with_m_unit(item_id):
 
 
 
+#Traders table related functions: 
+def get_trader_name(t_id):
+	trader = conn.select_query_single_row("SELECT t_name, t_id FROM traders WHERE t_id = '%s' " % (t_id))
+	if (trader == False): 
+		return "trader not exist"
+	return str(trader[0])
+
+
+
+
 #Transactions table related functions: 
 def translate_status(status_code):
 	#Translates the status id of a transaction - to its title. 

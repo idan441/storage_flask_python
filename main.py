@@ -140,8 +140,9 @@ def update_transaction_page():
 	form_costumer_id = request.form["costumer_id"]
 	form_notes = request.form["notes"]
 	
-	transactions.transaction_update(form_transaction_id, form_title, form_reason, form_transaction_type, form_supplier_id, form_costumer_id, form_notes)
+	is_success = transactions.transaction_update(form_transaction_id, form_title, form_reason, form_transaction_type, form_supplier_id, form_costumer_id, form_notes)
 	return redirect('/transactions/edit/' + str(form_transaction_id))
+
 
 #These micro-services will change the transaction status, while changing the storage if needed to
 @app.route('/transactions/close/<transaction_id>')
@@ -344,6 +345,11 @@ def update_trader_page():
 @app.route('/reports/storage')
 def report_storage_page():
 	return render_template('index.html', page_title="Storage report: ", content=reports.storage_report() )
+
+@app.route('/reports/active_suppliers')
+def report_active_suppliers_page():
+	return render_template('index.html', page_title="Active suppliers report: ", content=reports.active_suppliers_report() )
+
 
 
 

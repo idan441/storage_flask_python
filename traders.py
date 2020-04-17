@@ -9,13 +9,18 @@ conn = db_conn.db_conn() #Set the connection to the database, this will be used 
 
 def traders_list(): 
 	results = conn.select_query("SELECT t_id, t_name, is_active, is_supplier, is_costumer FROM traders")
+	content = ""
 
-	content = "<table><th>Id</th><th>name</th><th>activity</th><th>Roles</th><th>actions</td>"
-	for result in results: 
-		content += "<tr><td>%s</td><td>%s</td><td>%s</td><td>supplier - %s<br />costumer - %s</td><td><a href=\"/traders/edit/%s\">edit</a></td></tr>" % ( result[0], result[1], translate.translate_active_state(result[2]), translate.translate_active_state(result[3]), translate.translate_active_state(result[4]), result[0] )
-	content += '''</table>
-					count: ''' + str(len(results)) + '''
-					<br /><br />
+	if len(results) > 0 :
+		content += "<table><th>Id</th><th>name</th><th>activity</th><th>Roles</th><th>actions</td>"
+		for result in results: 
+			content += "<tr><td>%s</td><td>%s</td><td>%s</td><td>supplier - %s<br />costumer - %s</td><td><a href=\"/traders/edit/%s\">edit</a></td></tr>" % ( result[0], result[1], translate.translate_active_state(result[2]), translate.translate_active_state(result[3]), translate.translate_active_state(result[4]), result[0] )
+		content += '''</table>
+						count: ''' + str(len(results)) 
+	else:
+		content += "No traders have been added yet! "
+
+	content +=	 '''<br /><br />
 					<div class="button"><a href="/traders/add">Add a new trader</a></div>'''
 
 	return content
@@ -83,7 +88,7 @@ def trader_edit(t_id):
 							<input type="radio" name="is_supplier" value="0" checked><label for="0">Not active </label>'''
 
 	content += 		'''</td></tr>
-						<tr><td>Is supplier: </td><td>'''
+						<tr><td>Is costumer: </td><td>'''
 
 	#Print is_supplier property: 
 	if(int(result[7]) == 1):
