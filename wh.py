@@ -55,7 +55,7 @@ def wh_edit(wh_id):
 	else: #If is_active = 0 
 		content +=			 '''<option value="1">active (1) </option>
 								<option value="0" selected>not active (0) </option>'''
-	content +=			''' </select>
+	content +=			'''</select>
 						</td></tr>
 						<tr><td colspan="2"><input type="submit" value="Update warehouse" /></td></tr>
 					</table>

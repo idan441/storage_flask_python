@@ -106,6 +106,23 @@ def is_trader_costumer(t_id):
 
 
 
+
+#Transactions functions: 
+def get_transaction_type(t_id):
+	result = conn.select_query_single_row("SELECT transaction_type FROM transactions WHERE transaction_id = '%s' " % (t_id))
+	if (result == False): 
+		return "transaction not found! transaction id " + str(t_id)
+	return result[0]
+
+def get_transaction_title(t_id):
+	result = conn.select_query_single_row("SELECT title FROM transactions WHERE transaction_id = '%s' " % (t_id))
+	if (result == False): 
+		return "transaction not found! transaction id " + str(t_id)
+	return result[0]
+
+
+
+
 #Transactions table related functions: 
 def translate_status(status_code):
 	#Translates the status id of a transaction - to its title. 

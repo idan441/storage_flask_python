@@ -35,8 +35,6 @@ actions -
 	user_id
 	transaction_id
 	amount
-	amount_before XXX
-	amount_after XXX
 	warehouse_id - NOT TO ADD! 
 	storage_id - TO ADD IN FUTURE... 
 	notes

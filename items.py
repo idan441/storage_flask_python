@@ -119,7 +119,11 @@ def item_edit(item_id):
 	if(translate.is_warehouse_active(result[5]) == 0):
 		content += "<p style=""color:red;"">The warehouse assigned to this item is not active! It is recommended to change the warehouse to the current warehouse where the item located at. </p>"	
 
-	content += '''<br />
+
+	content += '''
+				<h3>Reports: </h3>
+				<a href="/reports/transactions_by_trader?i_id=''' + item_id + '''">Transactions done by this trade</a>
+				<br />
 				<p>
 					<b>Important - changing item's amount through this form: </b><br />
 					Though you can change the amount of the item in this form, it is recommended to change it using transactions. By using transactions you can document where and who changed the amount. Changing the amount here will be permanent without being able to know when or why the change was done! 
