@@ -69,8 +69,8 @@ def items_add__page():
 		form_warehouse_id = request.form["warehouse_id"]
 		form_notes = request.form["notes"]
 
-		new_item_id = items.item_add(form_item_name, form_amount, form_m_unit, form_price, form_supplier_id, form_warehouse_id, form_notes)
-		return render_template('index.html', page_title="Edit item: ", message="New item was added successfully! ", content=items.item_edit(new_item_id) )
+		items.item_add(form_item_name, form_amount, form_m_unit, form_price, form_supplier_id, form_warehouse_id, form_notes)
+		return render_template('index.html', page_title="Edit item: ", message="New item was added successfully! ", content=items.items_list() )
 
 @app.route('/items/edit/<item_id>', methods=['GET'])
 def edit_item_page(item_id):	
@@ -86,9 +86,11 @@ def update_item_page():
 	form_supplier_id = request.form["supplier_id"]
 	form_warehouse_id = request.form["warehouse_id"]
 	form_notes = request.form["notes"]
-	if(items.item_update(form_item_id, form_item_name, form_amount, form_m_unit, form_price, form_supplier_id, form_warehouse_id, form_notes)):
-		return render_template('index.html', page_title="Edit item: ", message="Item updated successfully! ", content=items.item_edit(form_item_id) )		
-	return render_template('index.html', page_title="Edit item: ", warning="Item update failed", content=items.item_edit(form_item_id) )		
+	
+	is_success = items.item_update(form_item_id, form_item_name, form_amount, form_m_unit, form_price, form_supplier_id, form_warehouse_id, form_notes)
+	if(is_success):
+		return render_template('index.html', page_title="Edit item: ", message="Item updated successfully! ", content=items.item_edit(form_item_id))
+	return render_template('index.html', page_title="Edit item: ", warning="Item update failed", content=items.item_edit(form_item_id) )
 
 
 
@@ -136,11 +138,10 @@ def update_transaction_page():
 	form_title = request.form["title"]
 	form_reason = request.form["reason"]
 	form_transaction_type = request.form["transaction_type"]
-	form_supplier_id = request.form["supplier_id"]
-	form_costumer_id = request.form["costumer_id"]
+	form_trader_id = request.form["trader_id"]
 	form_notes = request.form["notes"]
 	
-	is_success = transactions.transaction_update(form_transaction_id, form_title, form_reason, form_transaction_type, form_supplier_id, form_costumer_id, form_notes)
+	is_success = transactions.transaction_update(form_transaction_id, form_title, form_reason, form_transaction_type, form_trader_id, form_notes)
 	return redirect('/transactions/edit/' + str(form_transaction_id))
 
 

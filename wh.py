@@ -26,7 +26,7 @@ def wh_list():
 						<select name="is_active">
 							<option value="1">active (1) </option>
 							<option value="0">not active (0) </option>
-							</select>
+						</select>
 						</td></tr>
 						<tr><td colspan="2"><input type="submit" value="add new warehouse" /></td></tr>
 					</table>
@@ -47,7 +47,16 @@ def wh_edit(wh_id):
 					<table>
 						<tr><td>Warehouse Id: </td><td><input type="hidden" name="wh_id" value="''' + str(result[0]) + '''" />''' + str(result[0]) + '''</td></tr>
 						<tr><td>Warehouse name: </td><td><input type="text" name="wh_name" value="''' + str(result[1]) + '''" /></td></tr>
-						<tr><td> Is it active? </td><td><input type="text" name="is_active" value="''' + str(result[2]) + '''" /></td></tr>
+						<tr><td> Is it active? </td><td>
+							<select name="is_active">'''
+	if(int(result[2]) == 1): #If is_active = 1 
+		content +=			 '''<option value="1" selected>active (1) </option>
+								<option value="0">not active (0) </option>'''
+	else: #If is_active = 0 
+		content +=			 '''<option value="1">active (1) </option>
+								<option value="0" selected>not active (0) </option>'''
+	content +=			''' </select>
+						</td></tr>
 						<tr><td colspan="2"><input type="submit" value="Update warehouse" /></td></tr>
 					</table>
 				</form>'''

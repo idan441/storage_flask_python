@@ -1,5 +1,5 @@
 body {background-color:#e6e6e6;margin:0px;padding:1px;}
-table, tr, td, th {border:1px solid black;}
+table, tr, td, th {margin:10px;border:1px solid black;}
 th {font-weight:bold;text-align:center;}
 td, tr, th {padding:3px;}
 ul {display:block;overflow:auto;}

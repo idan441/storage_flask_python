@@ -48,18 +48,17 @@ print("\tTable 'items' created successfully")
 
 conn.execute_query_no_commit('''CREATE TABLE transactions 
 				(transaction_id		INTEGER		PRIMARY KEY,
-				title	TEXT,
+				title	TEXT DEFAULT "",
 				user_id_created	INT		NOT NULL,
 				user_id_finished	INT,
 				user_id_last_status	INT		NOT NULL, 
-				reason	TEXT,
+				reason	TEXT DEFAULT "",
 				creation_date	TEXT		NOT NULL, 
-				transaction_date	TEXT, 
-				status	INT		NOT NULL, 
-				notes	TEXT, 
+				transaction_date	TEXT DEFAULT "", 
+				status	INT		NOT NULL DEFAULT 1, 
+				notes	TEXT DEFAULT "", 
 				transaction_type	INT		NOT NULL, 
-				supplier_id	INT, 
-				costumer_id	INT)
+				trader_id	INT)
 				''')
 print("\tTable 'transactions' created successfully")
 
@@ -70,8 +69,8 @@ conn.execute_query_no_commit('''CREATE TABLE actions
 				item_id	INT		NOT NULL, 
 				user_id	INT		NOT NULL, 
 				transaction_id	INT		NOT NULL, 
-				amount	INT		NOT NULL, 
-				notes	TEXT)
+				amount	INT		NOT NULL DEFAULT 0, 
+				notes	TEXT DEFAULT "")
 				''')
 print("\tTable 'actions' created successfully")
 
@@ -81,12 +80,12 @@ conn.execute_query_no_commit('''CREATE TABLE traders
 				(t_id		INTEGER		PRIMARY KEY,
 				t_name	INT		NOT NULL, 
 				is_active	INT		NOT NULL, 
-				address	INT, 
-				contact_name	INT, 
-				phone	TEXT, 
+				address	INT default "", 
+				contact_name	INT default"", 
+				phone	TEXT default "", 
 				is_supplier	INT		NOT NULL, 
 				is_costumer	INT		NOT NULL, 
-				notes	TEXT 
+				notes	TEXT default ""
 				)
 				''')
 print("\tTable 'traders' created successfully")
@@ -100,11 +99,11 @@ print("Creating admin user - ")
 print("\tThis user will be used for the first access - remember its details!") 
 print ("\tUse letters and numbers only") 
 
-print("\t Enter username: ")
+print("Enter username: ")
 input_username = input()
-print("\t Enter Display: (First + last name, Which will be shown on forms and reports.")
+print("Enter Display: (First + last name, Which will be shown on forms and reports.")
 input_name = input()
-print("\t Enter password: ")
+print("Enter password: ")
 input_password = input()
 
 import users

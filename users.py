@@ -11,7 +11,12 @@ def users_list():
 	#It is assumed that at least one user is set, for the admin. 
 	content = "<table><th>Id</th><th>name</th><th>activity</th><th>Admin (1/0)</th><th>actions</td>"
 	for result in results: 
-		content += "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td><a href=\"/users/edit/%s\">edit</a></td></tr>" % ( result[0], result[1], translate.translate_active_state(result[2]), result[3], result[0] )
+		#Calculate an output for is_admin property: 
+		is_admin = "No" 
+		if(result[3] == 1):
+			is_admin = "Yes"	
+		#Print the results
+		content += "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td><a href=\"/users/edit/%s\">edit</a></td></tr>" % ( result[0], result[1], translate.translate_active_state(result[2]), is_admin, result[0] )
 	content += "</table>" 
 	content += "count: " + str(len(results))
 	

@@ -53,8 +53,7 @@ transactions -
 	status # created (1) , open (2) , finished (3) , canceled (4) , deleted (5) 
 	notes
 	transaction_type # inside (1) , outside (2) 
-	supplier_id
-	costumer_id 
+	is_trader
 
 traders - 
 	t_id

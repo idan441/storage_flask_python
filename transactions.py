@@ -51,7 +51,7 @@ def transaction_edit(transaction_id):
 													user_id_created, user_id_finished, user_id_last_status, 
 													creation_date, transaction_date, 
 													transaction_type, 
-													supplier_id, costumer_id, 
+													trader_id,
 													notes
 											 FROM transactions 
 											 WHERE transaction_id = '%s' ''' % (transaction_id) )
@@ -84,44 +84,34 @@ def transaction_edit(transaction_id):
 	content += 		 '''</td></tr>
 
 
-						<tr><td>Supplier: </td><td>
-							<select name="supplier_id">'''
+						<tr><td>Trader: supplier/costumer</td><td>
+							<select name="trader_id">'''
 	#Add ACTIVE warehouses select list: 
-	query = "SELECT t_id, t_name FROM traders WHERE (is_supplier = 1 AND is_active = 1)"
-	if(str.isdigit(str(result[10]))):
+	query = "SELECT t_id, t_name FROM traders WHERE is_active = 1"
+
+	#Check which traders to list - suppliers or costumers, accordign to the transaction type. 
+	if(int(result[9]) == 1): #Means that it is a deposit transactin, hence the trader is a supplier. 
+		query += " AND is_supplier = 1"
+	else: #If transaction type is 2 - then it is a withdraw transaction, hence the trader is a costumer. 
+		query += " AND is_costumer = 1"		
+
+	#If the transactino is edited again after sometime, but the trader became unactive- then still print its details. 
+	if(str.isdigit(str(result[10]))): 
 		query += " OR t_id = %s" % (result[10])
-	suppliers_list = conn.select_query(query)
-	if(len(suppliers_list) == 0): 
-		return "No active suppliers! In order to edit a transaction, you need to have at least one active suppliers! "
 
-	for sp in suppliers_list:
-		if(sp[0] == result[10]):
-			content += 			'''<option value="%s" selected>%s</option>''' %(sp[0], sp[1])
+	traders_list = conn.select_query(query)
+	if(len(traders_list) == 0): 
+		return "No active traders! In order to edit a transaction, you need to have at least one active suppliers or costumer, depending whether the transaction type is deposit or withdraw! "
+
+	for trader in traders_list:
+		if(trader[0] == result[10]):
+			content += 			'''<option value="%s" selected>%s</option>''' %(trader[0], trader[1])
 		else:
-			content += 			'''<option value="%s">%s</option>''' %(sp[0], sp[1])
+			content += 			'''<option value="%s">%s</option>''' %(trader[0], trader[1])
 
 	content +=			'''</select>
 						</td></tr>
-						<tr><td>Costumer: </td><td>
-							<select name="costumer_id">'''
-	#Add ACTIVE warehouses select list: 
-	query = "SELECT t_id, t_name FROM traders WHERE is_costumer = 1 AND is_active = 1"
-	if(str.isdigit(str(result[11]))):
-		query += " OR t_id = %s" % (result[11])
-	costumers_list = conn.select_query(query)
-
-	if(len(costumers_list) == 0): 
-		return "No active costumers! In order to edit a transaction, you need to have at least one active costumer! "
-	
-	for cs in costumers_list:
-		if(sp[0] == result[11]):
-			content += 			'''<option value="%s" selected>%s</option>''' %(cs[0], cs[1])
-		else:
-			content += 			'''<option value="%s">%s</option>''' %(cs[0], cs[1])
-
-	content +=			'''</select>
-						</td></tr>
-						<tr><td>notes:</td><td><textarea name="notes">''' + str(result[12]) + '''</textarea></td></tr>
+						<tr><td>notes:</td><td><textarea name="notes">''' + str(result[11]) + '''</textarea></td></tr>
 						<tr><td colspan="2"><input type="submit" value="Update Item" /></td></tr>
 					</table>
 				</form>
@@ -146,9 +136,9 @@ def transaction_edit(transaction_id):
 	#Return the created content
 	return content
 
-def transaction_update(transaction_id, title, reason, transaction_type, supplier_id, costumer_id, notes):
+def transaction_update(transaction_id, title, reason, transaction_type, trader_id, notes):
 	#UPdate transaction details. This function is activatedby a form sent by transaction_edit() function. 
-	conn.execute_query("UPDATE transactions SET title = '%s' , reason = '%s' , transaction_type = '%s' , supplier_id = '%s' , costumer_id = '%s' , notes = '%s' , status = 2 , user_id_last_status = %s WHERE transaction_id = '%s' " % (title, reason, transaction_type, supplier_id, costumer_id, notes, login.get_u_id(), transaction_id) )
+	conn.execute_query("UPDATE transactions SET title = '%s' , reason = '%s' , transaction_type = '%s' , trader_id = '%s' , notes = '%s' , status = 2 , user_id_last_status = %s WHERE transaction_id = '%s' " % (title, reason, transaction_type, trader_id, notes, login.get_u_id(), transaction_id) )
 	return 1
 
 def transaction_view():
