@@ -102,7 +102,11 @@ def trader_edit(t_id):
 						<tr><td>notes:</td><td><textarea name="notes">''' + result[4] + '''</textarea></td></tr>
 						<tr><td colspan="2"><input type="submit" value="Update user" /></td></tr>
 					</table>
-				</form>'''
+				</form>
+
+				<br />
+				<h3>Reports: </h3>
+				<a href="/reports/transactions_by_trader?t_id=''' + t_id + '''">Transactions done by this trade</a>'''
 
 	return content
 

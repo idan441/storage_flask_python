@@ -21,7 +21,7 @@ def transactions_list():
 				content += "<td><a href=\"/transactions/view/%s\">%s</a></td><td><a href=\"/transactions/view/%s\">%s</a></td>" % (result[0], result[0], result[0], result[1])
 			else: 
 				content += "<td><a href=\"/transactions/edit/%s\">%s</a></td><td><a href=\"/transactions/edit/%s\">%s</a></td>" % (result[0], result[0], result[0], result[1])
-			content += "<td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" % ( translate.transalte_transaction_type(result[5]) ,result[2], result[3], translate.translate_status(result[4]) )
+			content += "<td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" % ( translate.translate_transaction_type(result[5]) ,result[2], result[3], translate.translate_status(result[4]) )
 
 		content += "</table>" 
 		content += "count: " + str(len(results))

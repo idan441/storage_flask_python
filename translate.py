@@ -85,6 +85,12 @@ def get_trader_name(t_id):
 		return "trader not exist"
 	return str(trader[0])
 
+def is_trader_active(t_id):
+	trader = conn.select_query_single_row("SELECT is_active FROM traders WHERE t_id = '%s' " % (t_id))
+	if (trader == False): 
+		return "trader not exist"
+	return trader[0]
+
 def is_trader_supplier(t_id):
 	trader = conn.select_query_single_row("SELECT is_supplier FROM traders WHERE t_id = '%s' " % (t_id))
 	if (trader == False): 
@@ -110,7 +116,7 @@ def translate_status(status_code):
 	else:
 		return "wrong status code" + str(status_code)
 
-def transalte_transaction_type(transaction_type):
+def translate_transaction_type(transaction_type):
 	#Translates the transaction_type of a transaction - to its title. 
 	#transactions statuses - deposit (1) , withdraw (2)
 	status_dictionary = {1:'deposit', 2:'withdraw'}

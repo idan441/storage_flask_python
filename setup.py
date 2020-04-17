@@ -14,7 +14,7 @@ print("Creating database tables - ")
 conn.execute_query_no_commit('''CREATE TABLE warehouses 
 				(wh_id		INTEGER		PRIMARY KEY,
 				wh_name	TEXT	NOT NULL,
-				is_active	INT		NOT NULL)
+				is_active	INT		NOT NULL DEFAULT 1)
 				''')
 print("\tTable 'warehouses' created successfully")
 
@@ -25,8 +25,8 @@ conn.execute_query_no_commit('''CREATE TABLE users
 				d_name	TEXT	NOT NULL, 
 				u_name	TEXT	NOT NULL, 
 				password	TEXT	NOT NULL,
-				is_active	INT		NOT NULL,
-				is_admin	INT		NOT NULL)
+				is_active	INT		NOT NULL DEFAULT 1,
+				is_admin	INT		NOT NULL DEFAULT 0)
 				''')
 print("\tTable 'users' created successfully")
 
@@ -35,12 +35,12 @@ print("\tTable 'users' created successfully")
 conn.execute_query_no_commit('''CREATE TABLE items 
 				(item_id		INTEGER		PRIMARY KEY,
 				item_name	TEXT	NOT NULL,
-				amount	INT		NOT NULL, 
-				m_unit	TEXT	NOT NULL,
-				price	INT		NOT NULL, 
+				amount	INT		NOT NULL DEFAULT 0, 
+				m_unit	TEXT	NOT NULL DEFAULT "Units",
+				price	INT		NOT NULL DEFAULT 0, 
 				supplier_id	INT		NOT NULL, 
 				warehouse_id	INT		NOT NULL, 
-				notes	TEXT)
+				notes	TEXT DEFAULT "")
 				''')
 print("\tTable 'items' created successfully")
 

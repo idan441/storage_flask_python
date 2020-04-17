@@ -351,6 +351,14 @@ def report_storage_page():
 def report_active_suppliers_page():
 	return render_template('index.html', page_title="Active suppliers report: ", content=reports.active_suppliers_report() )
 
+@app.route('/reports/transactions_by_trader', methods=['GET','POST'])
+def report_transactions_by_trader_form_page():
+	if(request.args.get("t_id") != None): #If the form was sent - generate the report: 
+		t_id = request.args.get('t_id')
+		return render_template('index.html', page_title="Transactions by trader report: ", content=reports.transactions_by_trader_report(t_id) )
+	#Else show the form - 
+	return render_template('index.html', page_title="Transactions by trader report: ", content=reports.transactions_by_trader_report_form() )
+	
 
 
 
