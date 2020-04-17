@@ -84,35 +84,43 @@ def transaction_edit(transaction_id):
 	content += 		 '''</td></tr>
 
 
-						<tr><td>Supplier id: </td><td>
-							<select name="supplier_id">
-								<option value="''' + str(result[10]) + '''">Current - ''' + translate.get_trader_name(result[10]) +'''</option>''' #Shows default chosen supplier, whether he is active or not
-
+						<tr><td>Supplier: </td><td>
+							<select name="supplier_id">'''
 	#Add ACTIVE warehouses select list: 
-	suppliers_list = conn.select_query("SELECT t_id, t_name FROM traders WHERE is_supplier = 1 AND is_active = 1")
+	query = "SELECT t_id, t_name FROM traders WHERE (is_supplier = 1 AND is_active = 1)"
+	if(str.isdigit(str(result[10]))):
+		query += " OR t_id = %s" % (result[10])
+	suppliers_list = conn.select_query(query)
+	if(len(suppliers_list) == 0): 
+		return "No active suppliers! In order to edit a transaction, you need to have at least one active suppliers! "
+
 	for sp in suppliers_list:
 		if(sp[0] == result[10]):
 			content += 			'''<option value="%s" selected>%s</option>''' %(sp[0], sp[1])
 		else:
 			content += 			'''<option value="%s">%s</option>''' %(sp[0], sp[1])
 
-	content +=		'''		</select>
+	content +=			'''</select>
 						</td></tr>
-						<tr><td>Costumer id: </td><td>
-							<select name="costumer_id">
-								<option value="''' + str(result[11]) + '''">Current - ''' + translate.get_trader_name(result[11]) +'''</option>''' #Shows default chosen supplier, whether he is active or not
-
+						<tr><td>Costumer: </td><td>
+							<select name="costumer_id">'''
 	#Add ACTIVE warehouses select list: 
-	costumers_list = conn.select_query("SELECT t_id, t_name FROM traders WHERE is_costumer = 1 AND is_active = 1")
+	query = "SELECT t_id, t_name FROM traders WHERE is_costumer = 1 AND is_active = 1"
+	if(str.isdigit(str(result[11]))):
+		query += " OR t_id = %s" % (result[11])
+	costumers_list = conn.select_query(query)
+
+	if(len(costumers_list) == 0): 
+		return "No active costumers! In order to edit a transaction, you need to have at least one active costumer! "
+	
 	for cs in costumers_list:
 		if(sp[0] == result[11]):
 			content += 			'''<option value="%s" selected>%s</option>''' %(cs[0], cs[1])
 		else:
 			content += 			'''<option value="%s">%s</option>''' %(cs[0], cs[1])
 
-	content +=		'''		</select>
+	content +=			'''</select>
 						</td></tr>
-
 						<tr><td>notes:</td><td><textarea name="notes">''' + str(result[12]) + '''</textarea></td></tr>
 						<tr><td colspan="2"><input type="submit" value="Update Item" /></td></tr>
 					</table>

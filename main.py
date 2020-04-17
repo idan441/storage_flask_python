@@ -39,13 +39,13 @@ def login_page():
 		if(login.login(form_username, form_password)):
 			return redirect('/') #If login success - redirect to main page
 		else:
-			return render_template('login.html' , message="Wrong username or password")
+			return render_template('login.html' , warning="Wrong username or password")
 
 @app.route('/logout')
 def logout_page():
 	if(login.logout()): 
 		return render_template('login.html', message="You logged out successfully! ")
-	return render_template('login.html', message="Logout failed, please try to logout again! ")
+	return render_template('login.html', warning="Logout failed, please try to logout again! ")
 
 
 

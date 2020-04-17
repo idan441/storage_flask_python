@@ -44,7 +44,17 @@ def item_add_form():
 
 	content +=	'''				</select>
 							</td></tr>
-							<tr><td>Supplier: </td><td><input type="text" name="supplier_id" /></td></tr>
+							<tr><td>Supplier: </td><td>
+								<select name="supplier_id">'''
+	#Add ACTIVE warehouses select list: 
+	suppliers_list = conn.select_query("SELECT t_id, t_name FROM traders WHERE is_supplier = 1 AND is_active = 1")
+	if(len(suppliers_list) == 0):
+		return "No suppliers available. You need to have at least 1 active supplier to relate the item to. Active an existing supplier or create a new supplier through the <a href=""/traders"">traders list. </a>"
+	for sp in suppliers_list:
+			content += 			'''<option value="%s">%s</option>''' %(sp[0], sp[1])
+
+	content +=					'''</select>
+							</td></tr>
 							<tr><td>notes:</td><td><textarea name="notes"></textarea></td></tr>
 							<tr><td colspan="2"><input type="submit" value="add new item" /></td></tr>
 						</table>
@@ -72,9 +82,9 @@ def item_edit(item_id):
 							<select name="warehouse_id">'''
 
 	#Add ACTIVE warehouses select list: 
-	warehouses_list = conn.select_query("SELECT wh_id, wh_name FROM warehouses WHERE is_active = 1")
+	warehouses_list = conn.select_query("SELECT wh_id, wh_name FROM warehouses WHERE is_active = 1 OR wh_id = %s" % (result[5]))
 	if(len(warehouses_list) == 0):
-		return "No warehouses are available. You need to have at least 1 active warehouse to relate the item to. Activate or add a new warehouse! " 
+		return "No warehouses are available. You need to have at least 1 active warehouse to relate the item to. <a href=""/warehouse"">Activate or add a new warehouse! </a>" 
 	else:
 		for wh in warehouses_list:
 			if(wh[0] == result[5]):
@@ -84,12 +94,32 @@ def item_edit(item_id):
 
 	content +=		'''		</select>
 						</td></tr>
-						<tr><td>supplier: </td><td><input type="text" name="supplier_id" value="''' + str(result[6]) + '''" /></td></tr>
+						<tr><td>supplier: </td><td>
+							<select name="supplier_id">'''
+
+	#Add ACTIVE suppliers select list: 
+	suppliers_list = conn.select_query("SELECT t_id, t_name FROM traders WHERE (is_supplier = 1 AND is_active = 1) OR t_id = %s" % (result[6]))
+	for sp in suppliers_list:
+		if(sp[0] == result[6]):
+			content += 			'''<option value="%s" selected>%s</option>''' %(sp[0], sp[1])
+		else:
+			content += 			'''<option value="%s">%s</option>''' %(sp[0], sp[1])
+
+	content +=		'''		</select>
+						</td></tr>
 						<tr><td>notes:</td><td><textarea name="notes">''' + str(result[7]) + '''</textarea></td></tr>
 						<tr><td colspan="2"><input type="submit" value="Update Item" /></td></tr>
 					</table>
 				</form>
-				<br />
+				<br />'''
+
+	#Print warnings - if the warehuose or supplier assigned to this item are inactive. 
+	if(translate.is_trader_supplier(result[6]) == 0):
+		content += "<p style=""color:red;"">The supplier assigned to this item is not active! It is recommended to change the supplier or re-creating the item with its new supplier. </p>"
+	if(translate.is_warehouse_active(result[5]) == 0):
+		content += "<p style=""color:red;"">The warehouse assigned to this item is not active! It is recommended to change the warehouse to the current warehouse where the item located at. </p>"	
+
+	content += '''<br />
 				<p>
 					<b>Important - changing item's amount through this form: </b><br />
 					Though you can change the amount of the item in this form, it is recommended to change it using transactions. By using transactions you can document where and who changed the amount. Changing the amount here will be permanent without being able to know when or why the change was done! 

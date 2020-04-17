@@ -42,6 +42,12 @@ def get_warehouse_name(wh_id):
 		return "Warehouse not exist"
 	return result[0]
 
+def is_warehouse_active(wh_id):
+	result = conn.select_query_single_row("SELECT is_active FROM warehouses WHERE wh_id = '%s' " % (wh_id))
+	if (result == False): 
+		return "Warehouse not exist"
+	return result[0]
+
 
 
 #Items table related functions: 
@@ -78,6 +84,18 @@ def get_trader_name(t_id):
 	if (trader == False): 
 		return "trader not exist"
 	return str(trader[0])
+
+def is_trader_supplier(t_id):
+	trader = conn.select_query_single_row("SELECT is_supplier FROM traders WHERE t_id = '%s' " % (t_id))
+	if (trader == False): 
+		return "trader not exist"
+	return trader[0]
+
+def is_trader_costumer(t_id):
+	trader = conn.select_query_single_row("SELECT is_costumer FROM traders WHERE t_id = '%s' " % (t_id))
+	if (trader == False): 
+		return "trader not exist"
+	return trader[0]
 
 
 
