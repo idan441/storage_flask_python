@@ -35,6 +35,11 @@ def logout():
 	session.pop('is_admin', None)
 	return True
 
+def is_logged_in():
+	if('u_id' in session):
+		return 1
+	return 0
+
 
 #Functions used to access user's session details, by other pages - 
 def get_u_id(): 

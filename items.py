@@ -122,7 +122,7 @@ def item_edit(item_id):
 
 	content += '''
 				<h3>Reports: </h3>
-				<a href="/reports/transactions_by_trader?i_id=''' + item_id + '''">Transactions done by this trade</a>
+				<a href="/reports/transactions_by_item?i_id=''' + item_id + '''">Transactions done by this trade</a>
 				<br />
 				<p>
 					<b>Important - changing item's amount through this form: </b><br />

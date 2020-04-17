@@ -16,6 +16,9 @@ app.secret_key = "any random string" #Used to generate sessions, in the login.py
 
 @app.route('/')
 def main_page():
+	if(login.is_logged_in() == 0):
+		redirect('/login')
+
 	return render_template('main.html', page_title="Main page:")
 
 @app.route('/about')
@@ -31,6 +34,11 @@ def help_page():
 #Login micro-services
 @app.route('/login', methods=['POST', 'GET'])
 def login_page():
+	#Check if user is loggged in
+	if(login.is_logged_in()):
+		return redirect('/')
+
+	#Check if the login form was submitted
 	if(request.method == 'GET'): 
 		return render_template('login.html')
 	else: #If it is POST , then it means the form was sent - try to relogin. 
