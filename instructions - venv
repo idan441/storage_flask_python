@@ -41,3 +41,16 @@ pip list #Will show packages list.
 
 References - 
 https://realpython.com/python-virtual-environments-a-primer/
+
+
+
+How to make the requirements file for installing it in other computers or using docker - 
+https://pip.pypa.io/en/stable/reference/pip_freeze/
+
+to make the requirement file type - 
+$pip freeze
+
+$pip freez >> requirements.txt
+
+to install the requirements in other environments - 
+$pip intall -r requirements.txt

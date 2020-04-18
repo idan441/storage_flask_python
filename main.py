@@ -8,6 +8,7 @@ import db_conn #db connection class, included also in all other modules.
 import login #Login module, which is up for logging and supplying user credentials after login. 
 import reports #Reports generating functions. 
 import traders #Traders functions
+import translate #Translate module includes transalaetion functions which translated numeric values to their meaning AND get functions related to other modules. 
 
 app = Flask(__name__, template_folder="templates")
 app.secret_key = "asdfiklmavzulvclkzncbvjxflhbg" #Used to generate sessions, in the login.py module. 
@@ -131,6 +132,7 @@ def new_transaction_page(transaction_type):
 
 	if(int(transaction_type) not in [1,2]):
 		return "wrong value, please choose inside (1) or outside (2) "
+
 	new_transaction_id = transactions.transaction_new(transaction_type)
 	return redirect('/transactions/edit/' + str(new_transaction_id))
 
@@ -138,13 +140,11 @@ def new_transaction_page(transaction_type):
 def view_transaction_page(transaction_id):
 	#It is for a completed transactions
 	#Viewing a transaction shows information about it - but cannot allow to edit it! 	
-
-	#Until view is available - sned them to edit mode. 
-
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 
-	return redirect('/transactions/edit/' + str(transaction_id))
+	if(int(translate.get_transaction_status(transaction_id)) in [1,2]): #OPen transaction, which has status created (1) or open (2) status - allows editing, so show them the edit forms. 
+		return redirect("/transactions/edit/" + str(transaction_id))
 
 	return render_template('index.html', page_title="View transaction: ", content=transactions.transaction_view(transaction_id) )
 
@@ -154,6 +154,9 @@ def edit_transaction_page(transaction_id):
 
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
+
+	if(int(translate.get_transaction_status(transaction_id)) in [3, 4, 5]): #Closed transactions cannot be edited - these have status close (3) , canceled (4) or deleted (5) - so reffer them to the view mode. 
+		return redirect("/transactions/view/" + str(transaction_id))
 
 	#If information was sent from the form in this page, in order to update the transactino - then try to update it. 
 	#Updating of transaction is reffered using POST method. 

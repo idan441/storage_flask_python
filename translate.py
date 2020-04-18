@@ -80,6 +80,9 @@ def get_item_amount_with_m_unit(item_id):
 
 #Traders table related functions: 
 def get_trader_name(t_id):
+	if(t_id == Trader):
+		return "No trader set"
+
 	trader = conn.select_query_single_row("SELECT t_name, t_id FROM traders WHERE t_id = '%s' " % (t_id))
 	if (trader == False): 
 		return "trader not exist"
@@ -120,6 +123,12 @@ def get_transaction_title(t_id):
 		return "transaction not found! transaction id " + str(t_id)
 	return result[0]
 
+def get_transaction_status(t_id):
+	result = conn.select_query_single_row("SELECT status FROM transactions WHERE transaction_id = '%s' " % (t_id))
+	if (result == False): 
+		return "transaction not found! transaction id " + str(t_id)
+	return result[0]
+
 
 
 
@@ -140,7 +149,7 @@ def translate_transaction_type(transaction_type):
 	if(transaction_type in status_dictionary):
 		return status_dictionary[transaction_type] + ("(%s)" % (transaction_type))
 	else:
-		return "wrong transaction type" + str(transaction_type)
+		return "wrong transaction type - " + str(transaction_type)
 
 
 #Is_active function - relevant for some modules. 

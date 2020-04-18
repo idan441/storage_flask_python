@@ -7,21 +7,21 @@ import translate
 conn = db_conn.db_conn() #Set the connection to the database, this will be used by the following functions. 
 
 def transactions_list(): 
-	results = conn.select_query("SELECT transaction_id, title, creation_date, transaction_date, status, transaction_type FROM transactions ORDER BY creation_date DESC, status")
+	results = conn.select_query("SELECT transaction_id, title, creation_date, transaction_date, status, transaction_type, trader_id FROM transactions ORDER BY creation_date DESC, status")
 	content = ""
 	
 	if(len(results)==0): 
 		content += "no transactions have been created yet! " 
 	else: 
 		content = '''<table>
-						<th>Id</th><th>Title</th><th>Type</th><th>Creation date</th><th>Transaction date</th><th>status</th>
+						<th>Id</th><th>Title</th><th>Type</th><th>Trader (ID)</th><th>Creation date</th><th>Transaction date</th><th>status</th>
 						<tr>'''
 		for result in results: 
 			if(result[4] == "5"): #status = 5 = transaction is finished and can only be viewed
 				content += "<td><a href=\"/transactions/view/%s\">%s</a></td><td><a href=\"/transactions/view/%s\">%s</a></td>" % (result[0], result[0], result[0], result[1])
 			else: 
 				content += "<td><a href=\"/transactions/edit/%s\">%s</a></td><td><a href=\"/transactions/edit/%s\">%s</a></td>" % (result[0], result[0], result[0], result[1])
-			content += "<td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" % ( translate.translate_transaction_type(result[5]) ,result[2], result[3], translate.translate_status(result[4]) )
+			content += "<td>%s</td><td>%s (%s)</td><td>%s</td><td>%s</td><td>%s</td></tr>" % ( translate.translate_transaction_type(result[5]), translate.get_trader_name(result[6]), result[6] ,result[2], result[3], translate.translate_status(result[4]) )
 
 		content += "</table>" 
 		content += "count: " + str(len(results))
@@ -132,6 +132,59 @@ def transaction_edit(transaction_id):
 	#Add actions list: 
 	content += actions_list(transaction_id)
 
+	#Return the created content
+	return content
+
+def transaction_view(transaction_id):
+	#prints a form with transaction details, and allows to edit it. The form will refer to the edit function named transaction_edit()
+	result = conn.select_query_single_row('''SELECT transaction_id, title, reason, status, 
+													user_id_created, user_id_finished, user_id_last_status, 
+													creation_date, transaction_date, 
+													transaction_type, 
+													trader_id,
+													notes
+											 FROM transactions 
+											 WHERE transaction_id = '%s' ''' % (transaction_id) )
+
+	#Print transaction edit form: 
+	content = '''<table>
+					<tr><td>Transaction Id: </td><td><input type="hidden" name="transaction_id" value="''' + str(result[0]) + '''" />''' + str(result[0]) + '''</td></tr>
+					<tr><td>Title: </td><td>''' + str(result[1]) + '''</td></tr>
+					<tr><td>Reason: </td><td>''' + str(result[2]) + '''</td></tr>
+					<tr><td>Status: </td><td>''' + translate.translate_status(result[3]) + '''</td></tr>
+					
+					<tr><td>Created by: </td><td>''' + translate.get_user_d_name(result[4]) + '''</td></tr>
+					<tr><td>Closed by: </td><td>''' + translate.get_user_d_name(result[5]) + '''</td></tr>
+					<tr><td>Last user who changed status: </td><td>''' + translate.get_user_d_name(result[6]) + '''</td></tr>
+					
+					<tr><td>Creation date: </td><td>''' + str(result[7]) + '''</td></tr>
+					<tr><td>Transaction date: </td><td>''' + str(result[8]) + '''</td></tr>
+					
+					<tr><td>transaction type: </td><td>''' + translate.translate_transaction_type(int(result[9])) + '''</td></tr>'''
+
+	if(result[9] == 1): #If it is deposit - then show supplier in the field name. 
+		content += "<tr><td>Supplier:</td><td>%s</td></tr>" % (result[10])
+	else: #If it is withdraw - then show costumer field name. 
+		content += "<tr><td>Costumer:</td><td>%s</td></tr>" % (result[10])
+
+	content +=		'''<tr><td>notes:</td><td>''' + str(result[11]) + '''</td></tr>
+					</table>
+				<br />'''
+
+	#Print actions list: 
+	content += '''<form method="post" action="/transactions/update">
+					<table>'''
+	print("<tr></tr>")
+
+	content +='''	</table>
+				</form>
+				<br />'''
+
+	#Add actions list: 
+	content += actions_list_view_mode(transaction_id)
+
+	#Print available transaction status change optios: 
+	content += transactions_status_change_list(transaction_id)
 
 	#Return the created content
 	return content
@@ -140,9 +193,6 @@ def transaction_update(transaction_id, title, reason, transaction_type, trader_i
 	#UPdate transaction details. This function is activatedby a form sent by transaction_edit() function. 
 	conn.execute_query("UPDATE transactions SET title = '%s' , reason = '%s' , transaction_type = '%s' , trader_id = '%s' , notes = '%s' , status = 2 , user_id_last_status = %s WHERE transaction_id = '%s' " % (title, reason, transaction_type, trader_id, notes, login.get_u_id(), transaction_id) )
 	return 1
-
-def transaction_view():
-	pass
 
 
 
@@ -233,7 +283,7 @@ def transaction_uncancel(transaction_id):
 	transaction_status = transaction[0]
 
 	if(transaction_status in [4]):
-		conn.execute_query("UPDATE transactions SET status = 2 , user_id_finished = %s WHERE transaction_id = %s " % (login.get_u_id() , transaction_id))
+		conn.execute_query("UPDATE transactions SET status = 2 , user_id_last_status = %s , user_id_finished = NULL, transaction_date = NULL WHERE transaction_id = %s " % (login.get_u_id() , transaction_id))
 		return True
 	else:
 		return False
@@ -287,6 +337,23 @@ def actions_list(transaction_id):
 	#Add a form to add another action: 
 	if(get_transaction_status(transaction_id) not in [3,4,5]): #Show add actions form only if the transaction is open. 
 		content += actions_add_form(transaction_id)
+
+	return content
+
+def actions_list_view_mode(transaction_id):
+	#Print the list of actions of a specific transactino - with view mode! No add, delete or edit options! 
+	results = conn.select_query("SELECT action_id, item_id, amount, user_id, notes FROM actions WHERE transaction_id = %s" % (transaction_id))
+	content = "<h3>Actions list: </h3>"
+	#Print the table only if actions have been added: 			
+	if(len(results)==0): 
+		content += "no item have been added yet - so no actions can be done! Add items to the transaction in the form below: " 
+	else:
+		content += '''<table>
+						<tr><th>action id</th><th>item id</th><th>amount</th><th>added by</th><th>notes</th></tr>'''
+		for result in results: 
+			content +=	 "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" % (result[0], translate.get_item_name(result[1]), result[2], translate.get_user_d_name(result[3]), result[4])
+		content += '''</table>
+						count - ''' + str(len(results))
 
 	return content
 
