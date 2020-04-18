@@ -18,7 +18,6 @@ app.secret_key = "asdfiklmavzulvclkzncbvjxflhbg" #Used to generate sessions, in 
 def main_page():
 	if(login.is_logged_in() == 0): #Unlogged users - login
 		return redirect("/login")
-
 	return render_template('main.html', page_title="Main page:")
 
 @app.route('/about')
@@ -51,6 +50,10 @@ def login_page():
 
 @app.route('/logout')
 def logout_page():
+	if(login.is_logged_in() == 0): #If use is not logged-in
+		return redirect('login')
+
+	#Try to log out: 
 	if(login.logout()): 
 		return render_template('login.html', message="You logged out successfully! ")
 	return render_template('login.html', warning="Logout failed, please try to logout again! ")

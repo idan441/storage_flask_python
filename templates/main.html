@@ -3,6 +3,32 @@
 
 {% block static_html_content %}
 
-Welcome
+<p>
+	Welcome to the storage system. This is a beta unfinished version. 
+</p>
+
+<h4>Shortcuts: </h4>
+<ul>
+	<li><a href="/transactions/new/1">Open a new transaction - deposit</a></li>
+	<li><a href="/transactions/new/2">Open a new transaction - withdraw</a></li>
+	<li><a href="/reports/storage">Storage report - shows the current amount of storage</a></li>
+	<li><a href="/traders">Traders list - showing the suppliers and costumers</a></li>
+	<li><a href="/help">Help page - for any help needed</a></li>
+</ul>
+
+<br />
+
+
+<h4>Using the Storage System for the first time? </h4>
+<p>
+	It is advised to do the following - 
+</p>
+<ol>
+	<li>Add a warehouse</li>
+	<li>Add a supplier - this can be done from the traders page, by choosing "yes" under the <u>is supplier</u> property. </li>
+	<li>Add items, so you can deposit and withdraw them. </li>
+	<li>Change the storage, by opening new transactions. This should be done only after doing the above steps. </li>
+	<li>Need more help? Check the <a href="/help">help page</a> . </li>
+</ol>
 
 {% endblock %}
