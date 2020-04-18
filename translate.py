@@ -80,7 +80,7 @@ def get_item_amount_with_m_unit(item_id):
 
 #Traders table related functions: 
 def get_trader_name(t_id):
-	if(t_id == Trader):
+	if(t_id == None):
 		return "No trader set"
 
 	trader = conn.select_query_single_row("SELECT t_name, t_id FROM traders WHERE t_id = '%s' " % (t_id))
