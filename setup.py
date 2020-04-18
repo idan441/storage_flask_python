@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
 #The script creates the tables in the database: 
-import db_conn
+import db_conn #This module allows connection to the SQLite database. 
+import sys #This will allow to access environment variables from the terminal. It is to be used when running this script from terminal commands in the Dockerfile. 
 
 
 print("Connecting to the database: ")
@@ -99,12 +100,29 @@ print("Creating admin user - ")
 print("\tThis user will be used for the first access - remember its details!") 
 print ("\tUse letters and numbers only") 
 
-print("Enter username: ")
-input_username = input()
-print("Enter Display: (First + last name, Which will be shown on forms and reports.")
-input_name = input()
-print("Enter password: ")
-input_password = input()
+input_username = ""
+input_name = ""
+input_password = ""
+
+if(len(sys.argv) == 4): 
+	#sys.argv[0] = setup.python , which is a part of the command actually... Linux thing! 
+	print("\tAdmin users supplied by system variables! " )
+	input_username = sys.argv[1]
+	input_name = sys.argv[2]
+	input_password = sys.argv[3]
+elif(len(sys.argv) > 1):
+	exit("Error - not enough arguments for setup! \n Usage: python3 setup.py username display_name password")
+else:
+	print("Enter username: ")
+	input_username = input()
+	print("Enter Display: (First + last name, Which will be shown on forms  and reports.")
+	input_name = input()
+	print("Enter password: ")
+	input_password = input()
+
+#Check all variables are set - 
+if(input_username == "" or input_name == "" or input_password == ""):
+	exit("Please set username, display name and password with at least 1 Character! ")
 
 import users
 conn.execute_query("INSERT INTO users (u_name, password, is_active, is_admin, d_name) VALUES ('%s','%s', 1, 1, '%s')" % (input_username, input_password, input_name))

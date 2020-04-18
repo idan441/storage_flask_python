@@ -112,7 +112,7 @@ def transaction_edit(transaction_id):
 	content +=			'''</select>
 						</td></tr>
 						<tr><td>notes:</td><td><textarea name="notes">''' + str(result[11]) + '''</textarea></td></tr>
-						<tr><td colspan="2"><input type="submit" value="Update Item" /></td></tr>
+						<tr><td colspan="2"><input type="submit" value="Update transaction details" /></td></tr>
 					</table>
 				</form>
 				<br />'''
@@ -307,17 +307,8 @@ def transactions_status_change_list(transaction_id):
 
 	return content
 
-# actions - 
-# 	action_id
-# 	item_id
-# 	user_id
-# 	transaction_id
-# 	amount
-# 	amount_before
-# 	amount_after
-# 	warehouse_id - NOT TO ADD! 
-# 	storage_id - TO ADD IN FUTURE... 
-# 	notes
+
+
 
 #Actions functions - which will add, edit and delete actions from transactions. 
 def actions_list(transaction_id):
@@ -325,7 +316,7 @@ def actions_list(transaction_id):
 	content = "<h3>Actions list: </h3>"
 	#Print the table only if actions have been added: 			
 	if(len(results)==0): 
-		content += "no item have been added yet - so no actions can be done! Add items to the transaction in the form below: " 
+		content += "no actions have been added yet! You can add items in the form below:" 
 	else:
 		content += '''<table>
 						<tr><th>action id</th><th>item id</th><th>amount</th><th>added by</th><th>notes</th><th>actions: </th></tr>'''
@@ -346,7 +337,7 @@ def actions_list_view_mode(transaction_id):
 	content = "<h3>Actions list: </h3>"
 	#Print the table only if actions have been added: 			
 	if(len(results)==0): 
-		content += "no item have been added yet - so no actions can be done! Add items to the transaction in the form below: " 
+		content += "No actions have been added to this transaction. Therefore the storage didn't change! " 
 	else:
 		content += '''<table>
 						<tr><th>action id</th><th>item id</th><th>amount</th><th>added by</th><th>notes</th></tr>'''

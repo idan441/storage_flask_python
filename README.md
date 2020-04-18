@@ -6,7 +6,7 @@ The Storage System is a python application done using Flask. This application is
 *Make reports showing current storage, items movements, and traders orders. (suppliers and costumers)
 *Manage multiple traders, suppliers or costumer, giving the abillity to track their items movement. 
 
-This is my first python project. It uses Flask (with Jinja2) , python, HTML, CSS and more technologies. **This project is still not finished! **
+This is my first python project. It uses Flask (with Jinja2) , python, HTML, CSS and more technologies. *** This project is still not finished! ***
 
 
 ### Short "how to" instructions of running the application - 
@@ -17,6 +17,17 @@ The main application file's name is ```main.py``` . Run it from the virtual envi
 
 ## Docker version - 
 I have made a dockerized version of this application. 
+To build the image, download the repository and run the following command - 
+```bash
+docker build storage_app . 
+```
+This will build the image and tag it under the tag name "sotrage_app" . ( Of course you can change it. ) 
+To run the image - 
+```bash
+docker run -p 5000:5000 storage_app
+```
+When build the up, docker will run the ```setup.py``` script which creates sets up the SQLite database and will setup the admin user. You can choose different usernaem and password for the admin by editing the ```Dockerfile``` or by loging in to the application and changing the admin username and password, under users menu. 
+
 
 ## How to install it on your local machine - 
 Here are the instructions on how to install and operate the project from your own machine. The instructions are for Linux distributions, though with fine guides from the web you can operate it from Windows too. Also, it is assumed you have python3 installed on your machine. 
@@ -35,6 +46,9 @@ source env/bin/activate
 pip install -r requirements.txt #Make sure you have activated the virtual environment (venv) and in the applications directory. 
 ```
 6. Before starting the application, you need to set the database and admin user. You can do this by executing the file ```setup.py``` . Note that you have to do it only once when first installing the application! 
+	* You can setup the application in two ways - 
+	* By running the command ```python3 setup.py``` and putting the admin user credentials manually. 
+	* Or by using system arguments in the command-line itself - ```python3 setup.py username display_name password``` . For example ```python3 setup.py admin Idan 1234``` will setup the application wiht a user admin named "admin" with password "1234" and its display name will be "Idan" . This method is useful for automatic installation scripts such as when creating Dockerfile or using Ansible. 
 7. Finally - launch the application - 
 ```bash
 python3 main.py

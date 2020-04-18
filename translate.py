@@ -16,6 +16,8 @@ def get_user_u_name(user_id):
 	return u_name[0]
 
 def get_user_d_name(user_id):
+	if(user_id == None):
+		return "User not set"
 	result = conn.select_query_single_row("SELECT d_name FROM users WHERE u_id = '%s' " % (user_id))
 	if (result == False): 
 		return "wrong id - no display name" + str(user_id)
