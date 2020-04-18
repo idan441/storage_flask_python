@@ -2,11 +2,10 @@ from flask import Flask, session, redirect, url_for, escape, request
 import logging #For the abillity to add logs in the terminal
 import sys #Allows to use the exit() function to abort the code. 
 import db_conn
-app = Flask(__name__)
-
 
 
 conn = db_conn.db_conn()#Sets a connection to DB object. 
+
 
 
 #Login and logout functions used by main page - 
@@ -37,6 +36,11 @@ def logout():
 
 def is_logged_in():
 	if('u_id' in session):
+		return 1
+	return 0
+
+def is_logged_in_admin():
+	if('u_id' in session and session['is_admin'] == 1):
 		return 1
 	return 0
 
