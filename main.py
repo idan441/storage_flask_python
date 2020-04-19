@@ -10,8 +10,15 @@ import reports #Reports generating functions.
 import traders #Traders functions
 import translate #Translate module includes transalaetion functions which translated numeric values to their meaning AND get functions related to other modules. 
 
+#For generating a random string for the app.secret_key - import these two modules. 
+import random
+import string
+
 app = Flask(__name__, template_folder="templates")
-app.secret_key = "asdfiklmavzulvclkzncbvjxflhbg" #Used to generate sessions, in the login.py module. 
+
+random_secret_key = ''.join(random.choice(string.ascii_lowercase) for i in range (16))
+app.secret_key = random_secret_key #Used to generate sessions, in the login.py module. 
+
 
 
 

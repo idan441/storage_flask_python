@@ -30,6 +30,8 @@ docker build -t storage . #Will use the default Dockerfile which uses Alpine Lin
 docker build -t storage -f Dockerfile_ubuntu18.04 . #Will use the specified Dockerfile which uses Ubuntu 18.04 Linux. 
 ```
 This will build the image and tag it under the tag name "storage:latest" . ( Of course you can change it. ) 
+PLEASE NOTE - The installation of the application requires admin username, display name and password. These are set in the dockerfile itself! So change them before building the image. 
+
 To run the image - 
 ```bash
 docker run -p 5000:5000 storage
