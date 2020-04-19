@@ -163,9 +163,9 @@ def transaction_view(transaction_id):
 					<tr><td>transaction type: </td><td>''' + translate.translate_transaction_type(int(result[9])) + '''</td></tr>'''
 
 	if(result[9] == 1): #If it is deposit - then show supplier in the field name. 
-		content += "<tr><td>Supplier:</td><td>%s</td></tr>" % (result[10])
+		content += "<tr><td>Supplier:</td><td>%s (%s)</td></tr>" % (translate.get_trader_name(result[10]), result[10])
 	else: #If it is withdraw - then show costumer field name. 
-		content += "<tr><td>Costumer:</td><td>%s</td></tr>" % (result[10])
+		content += "<tr><td>Costumer:</td><td>%s (%s)</td></tr>" % (translate.get_trader_name(result[10]), result[10])
 
 	content +=		'''<tr><td>notes:</td><td>''' + str(result[11]) + '''</td></tr>
 					</table>

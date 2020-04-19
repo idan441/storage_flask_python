@@ -87,7 +87,7 @@ def item_edit(item_id):
 		return "No warehouses are available. You need to have at least 1 active warehouse to relate the item to. <a href=""/warehouse"">Activate or add a new warehouse! </a>" 
 	else:
 		for wh in warehouses_list:
-			if(wh[0] == result[5]):
+			if(wh[0] == result[6]):
 				content += 			'''<option value="%s" selected>%s</option>''' %(wh[0], wh[1])
 			else:
 				content += 			'''<option value="%s">%s</option>''' %(wh[0], wh[1])
@@ -100,7 +100,7 @@ def item_edit(item_id):
 	#Add ACTIVE suppliers select list: 
 	suppliers_list = conn.select_query("SELECT t_id, t_name FROM traders WHERE (is_supplier = 1 AND is_active = 1) OR t_id = %s" % (result[6]))
 	for sp in suppliers_list:
-		if(sp[0] == result[6]):
+		if(sp[0] == result[5]):
 			content += 			'''<option value="%s" selected>%s</option>''' %(sp[0], sp[1])
 		else:
 			content += 			'''<option value="%s">%s</option>''' %(sp[0], sp[1])

@@ -159,10 +159,10 @@ def transactions_by_item_report(i_id):
 
 	content +=   '''<h4>transactions list which has this item: </h4>
 					<table>
-						<tr><th>action ID</th><th>Transaction Title(Transaction ID)</th><th>Transaction Type</th><th>Amount</th><th>Action added by</tr>'''
+						<tr><th>action ID</th><th>Transaction Title(ID)</th><th>Transaction status:</th><th>Transaction Type</th><th>Amount</th><th>Action added by</tr>'''
 
 	for action in actions:
-		content += '''<tr><td>%s</td><td><a href="/transactions/edit/%s">%s(%s)</a></td><td>%s</td><td>%s (%s)</td><td><a href="/users/edit/%s">%s</a></td></tr>''' % (action[0], action[1], translate.get_transaction_title(action[1]), action[1], translate.translate_transaction_type(translate.get_transaction_type(action[1])), action[2], item[3], action[3], translate.get_user_d_name(action[3]))
+		content += '''<tr><td>%s</td><td><a href="/transactions/edit/%s">%s(%s)</a></td><td>%s</td><td>%s</td><td>%s (%s)</td><td><a href="/users/edit/%s">%s</a></td></tr>''' % (action[0], action[1], translate.get_transaction_title(action[1]), action[1], translate.translate_status(translate.get_transaction_status(action[1])), translate.translate_transaction_type(translate.get_transaction_type(action[1])), action[2], item[3], action[3], translate.get_user_d_name(action[3]))
 
 	content += '''</table>
 					Total items on list: ''' + str(len(actions)) + ''' 
