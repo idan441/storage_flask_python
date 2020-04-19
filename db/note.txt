@@ -1,0 +1,7 @@
+In this directory the database file be will created. 
+
+If you want to backup your data - copy this file. 
+If you want to load the data to another instance of the Storage System - copy the database file and place it in this directory. 
+
+If using docker - you can mount this volume. For further explanation about - reffer to the README.md file. 
+

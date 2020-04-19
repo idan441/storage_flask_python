@@ -1,6 +1,6 @@
 How to use virtual environment (venv) ? 
 
-To install pip - 
+To install venv - 
 $ python3 -m venv envname
 will create a directory named envname which will include all the virtual environment. 
 

@@ -6,7 +6,7 @@ The Storage System is a python application created with python3 using Flask. Thi
 *Make reports showing current storage, items movements, and traders orders. (suppliers and costumers)
 *Manage multiple traders, suppliers or costumer, giving the abillity to track their items movement. 
 
-This is my first python project. It uses Flask (with Jinja2) , python, HTML, CSS and more technologies. *** This project is still not finished! ***
+This is my first python project. It uses Flask (with Jinja2) , python, HTML, CSS and more technologies. 
 
 
 ### Short "how to" instructions of running the application - 
@@ -16,17 +16,26 @@ The main application file's name is ```main.py``` . Run it from the virtual envi
 
 
 ## Docker version - 
-I have made a dockerized version of this application. 
-To build the image, download the repository and run the following command - 
+I have made dockerized versions of this application, based on Ubuntu 18.04 or Alpine Linux. 
+To build the image, download the repository and run the following command while in the directory itself - 
 ```bash
-docker build storage_app . 
+docker build -t storage . #Will use the default Dockerfile which uses Alpine Linux. 
+docker build -t storage -f Dockerfile_ubuntu18.04 . #Will use the specified Dockerfile which uses Ubuntu 18.04 Linux. 
 ```
-This will build the image and tag it under the tag name "sotrage_app" . ( Of course you can change it. ) 
+This will build the image and tag it under the tag name "storage:latest" . ( Of course you can change it. ) 
 To run the image - 
 ```bash
-docker run -p 5000:5000 storage_app
+docker run -p 5000:5000 storage
+docker run -d -p 5000:5000 storage #Detached mode, meaning that the docker container will run at the background, without outputing to the terminal. 
 ```
-When build the up, docker will run the ```setup.py``` script which creates sets up the SQLite database and will setup the admin user. You can choose different usernaem and password for the admin by editing the ```Dockerfile``` or by loging in to the application and changing the admin username and password, under users menu. 
+
+Note - When build the up, docker will run the ```setup.py``` script which creates sets up the SQLite database and will setup the admin user. You can choose different username and password for the admin by editing the ```Dockerfile``` or by loging in to the application and changing the admin username and password, under users menu. 
+
+### Keeping your data - ###
+In order to save your data, which includes the database file - you need to mount the file. This can be done while spinning up the docker container. In the following command the database directory will be save to a docker volume named db. When wishing to reload the data again, run the same docker command - this will put in the db file the database file from the former docker container instance. 
+```bash
+docker run -d -p 5000:5000 -v db:/app/db storage
+```
 
 
 ## How to install it on your local machine - 
@@ -34,9 +43,11 @@ Here are the instructions on how to install and operate the project from your ow
 1. Download the repository. 
 2. Copy the application files to the desired location. 
 3. Make sure pip is installed in your machine. ( ```sudo apt install python3-pip``` for Ubuntu. ) 
-4. Install virtual environment in this directory - ```bash
+4. Install virtual environment in this directory - 
+```bash
 python3 -m venv envname
 ```
+
 5. Active the virtual environment - 
 ```bash 
 source env/bin/activate
@@ -71,3 +82,5 @@ $ python3 main.py
 Now you can enter to the specified address and start using the application! 
 
 
+### Backing up the database - 
+All data used by the application is saved in an SQLIte database file, named ```storage_db.db``` . If you wish to use the data in another machine, just copy this file to the application directory. ( And skip the setup process. ) 

@@ -1,0 +1,25 @@
+FROM ubuntu
+
+RUN apt update
+RUN apt install python3 -y
+RUN apt install python3-pip -y
+
+WORKDIR /app
+
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
+
+COPY . /app
+
+RUN useradd storage_user && groupadd storage
+RUN chown -R storage_user:storage /app
+RUN chown -R storage_user:storage * 
+USER storage_user
+
+#Install the application, put here the admin user details: python3 setup.py <username> <display_name> <password>
+RUN python3 setup.py admin MyName 1234 
+
+EXPOSE 5000 
+
+ENTRYPOINT ["python3"]
+CMD ["main.py"]
