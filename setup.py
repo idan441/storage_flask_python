@@ -3,8 +3,18 @@
 #The script creates the tables in the database: 
 import db_conn #This module allows connection to the SQLite database. 
 import sys #This will allow to access environment variables from the terminal. It is to be used when running this script from terminal commands in the Dockerfile. 
+from os import path#This will allow to check if the database file already exists. 
 
 
+#Check if the DB file already exist: 
+if(path.exists("./db/storage_db.db")):
+	print("DB already exists. SKipping installation assuming it was already done. ")
+	print("If an error occured and you want to re-install, delete the db file and try again. ")
+	exit(0)
+
+
+
+#Create the DB - and set up the tables. 
 print("Connecting to the database: ")
 print ("Creating the database")  
 conn = db_conn.db_conn()

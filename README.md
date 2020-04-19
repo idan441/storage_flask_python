@@ -6,13 +6,20 @@ The Storage System is a python application created with python3 using Flask. Thi
 *Make reports showing current storage, items movements, and traders orders. (suppliers and costumers)
 *Manage multiple traders, suppliers or costumer, giving the abillity to track their items movement. 
 
-This is my first python project. It uses Flask (with Jinja2) , python, HTML, CSS and more technologies. 
+This is my first python project. It uses Flask (with Jinja2) , python, HTML, CSS and more technologies. The data is stored in SQLite database. 
 
 
 ### Short "how to" instructions of running the application - 
 The main application file's name is ```main.py``` . Run it from the virtual environement to start the application. 
 
+
 ## Images gallery - 
+![An example for a report showing movements of a specific item. ](./images-for-readme/report_by_item.png) 
+![Storage report showing all items and their amounts. ](./images-for-readme/storage_report.png) 
+![An example of a trader card in edit mode. ](./images-for-readme/trader_edit.png) 
+![An example for a transaction, showing deposit of items. ](./images-for-readme/transaction_example.png) 
+![Warehouses list. ](./images-for-readme/warehouses_list.png) 
+
 
 
 ## Docker version - 
@@ -31,7 +38,7 @@ docker run -d -p 5000:5000 storage #Detached mode, meaning that the docker conta
 
 Note - When build the up, docker will run the ```setup.py``` script which creates sets up the SQLite database and will setup the admin user. You can choose different username and password for the admin by editing the ```Dockerfile``` or by loging in to the application and changing the admin username and password, under users menu. 
 
-### Keeping your data - ###
+### Mounting (Keeping) your data - ###
 In order to save your data, which includes the database file - you need to mount the file. This can be done while spinning up the docker container. In the following command the database directory will be save to a docker volume named db. When wishing to reload the data again, run the same docker command - this will put in the db file the database file from the former docker container instance. 
 ```bash
 docker run -d -p 5000:5000 -v db:/app/db storage
