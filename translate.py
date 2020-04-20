@@ -11,12 +11,14 @@ conn = db_conn.db_conn() #Set the connection to the database, this will be used 
 #Users table related functions: 
 def get_user_u_name(user_id):
 	u_name = conn.select_query_single_row("SELECT u_name FROM users WHERE u_id = '%s' " % (user_id))
+	# `if not u_name`
 	if (u_name == False): 
 		return "wrong id - no username" + str(user_id)
 	return u_name[0]
 
 def get_user_d_name(user_id):
 	result = conn.select_query_single_row("SELECT d_name FROM users WHERE u_id = '%s' " % (user_id))
+	#`if not result`
 	if (result == False): 
 		return "wrong id - no display name" + str(user_id)
 	return result[0]
