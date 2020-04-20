@@ -11,9 +11,11 @@ conn = db_conn.db_conn()#Sets a connection to DB object.
 
 #Login and logout functions used by main page - 
 def login(username, password):
+	# You imported `logging`, use it.
 	print(username, password)
 	print("SELECT u_id, d_name, is_active, is_admin FROM users WHERE u_name = '%s' AND password = '%s' " % (username, password))
 	username_details = conn.select_query_single_row("SELECT u_id, d_name, is_active, is_admin FROM users WHERE u_name = '%s' AND password = '%s' " % (username, password))
+	# Pythonic way: `if not username_details:`
 	if(username_details == False): #If username and password were not found
 		logging.warn("wrong attempt to login - username %s , password %s " % (username, password) )
 		return False
@@ -30,7 +32,7 @@ def login(username, password):
 	return True
 
 def logout():
-	session.pop('u_id', None)
+	session.pop('u_id', None) # Very nice!
 	session.pop('d_name', None) 
 	session.pop('is_admin', None)
 	return True
@@ -38,9 +40,11 @@ def logout():
 
 #Functions used to access user's session details, by other pages - 
 def get_u_id(): 
+	# Nice check. There's a more Pythonic way: `session.get("u_id", None)`, this will evaluate to False and won't proceed
 	if(session.get("u_id") is not None): 
 		return session['u_id']
 	logging.error("asked for u_id but this session is not exist")
+	# It'd be better if you raised an error (exception)
 	exit("asked for user session details while no user is loged in! function name get_user_id()") 
 
 def get_d_name(): 
