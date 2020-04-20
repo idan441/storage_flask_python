@@ -1,13 +1,14 @@
 #!/usr/bin/python
 
 import sqlite3 #import sqlite connection module fro python
+# You already imported `sqlite3`, you could do : sqlite3.Error
 from sqlite3 import Error #import the error module, used in the create_conn function
 
 import logging #For the abillity to add logs in the terminal
 
-
+# In Python classes are CamerCase: db_conn => DBConn(object)
 class db_conn: 
-
+	# It's better if you insert this in the constructor (__init__ method), and define it as : self.conn = ..
 	conn = sqlite3.connect(r'./test.db', check_same_thread=False)
 
 	def open_conn(self):
@@ -16,7 +17,9 @@ class db_conn:
 			self.conn = sqlite3.connect('test.db', check_same_thread=False)
 		except Error as e:
 			logging.error("connection to the sqlite failed! ")
+			# Why print it? You could add it to the log message ^
 			print(e)
+			# You could raise an exception: `raise`, instead of ending the whole program
 			sys.exit("connection to sqlite failed! ") 
 		else: 
 			logging.info("connection succeded")
@@ -28,12 +31,14 @@ class db_conn:
 	def insert_query(self, tbl_name, param, values):
 		#Accepts aprameters for insert query, return the id of the added row. 
 		if len(param) != len(values) :
+			# Raise an error (exception)
 			exit('Error - params != values')
 
-		param = str(param)[1:-1]
+		param = str(param)[1:-1] # Nice!
 		values = str(values)[1:-1]
-		
+		# If you're using Python3 try to stick with the new formatting: f"text here {variable here}" or str.format(..)
 		query = ' INSERT INTO %s (%s) VALUES (%s) ' % (tbl_name,param,values)
+		# It's better to use logging
 		print(query)
 		cur = self.conn.cursor()
 		cur.execute(query)
@@ -52,7 +57,8 @@ class db_conn:
 		cur = self.conn.cursor()
 		cur.execute(query)
 
-	def select_query(self, query): 
+	def select_query(self, query):
+		# This code is repeated in a lot of places, try to use this method instead, e.g., in `select_query_single_row`
 		#select query, returns a 2-dimensional array ("list" in python) with the results. 
 		cur = self.conn.cursor() 
 		cur.execute(query)
