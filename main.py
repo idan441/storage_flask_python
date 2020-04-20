@@ -17,7 +17,7 @@ import string
 app = Flask(__name__, template_folder="templates")
 
 random_secret_key = ''.join(random.choice(string.ascii_lowercase) for i in range (16))
-app.secret_key = random_secret_key #Used to generate sessions, in the login.py module. 
+app.secret_key = random_secret_key #Used to generate sessions, in the login.py module. The value is a random string of 16 characters 
 
 
 

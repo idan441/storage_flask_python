@@ -10,8 +10,8 @@ This is my first python project. It uses Flask (with Jinja2) , python, HTML, CSS
 
 
 ### Short "how to" instructions of running the application - 
-The main application file's name is ```main.py``` . Run it from the virtual environement to start the application. 
-
+The main application file's name is ```main.py```, the installation file is ```setup.py``` . Run it from the virtual environement to start the application. 
+Another way is by using a dockered version. I have made two Dockerfiles found in the directory - one is Ubuntu based and the other is Alpine based. You can build the docker images by running ```docker build .``` command from the directory. 
 
 ## Images gallery - 
 ![An example for a report showing movements of a specific item. ](./images-for-readme/report_by_item.png) 
@@ -24,6 +24,15 @@ The main application file's name is ```main.py``` . Run it from the virtual envi
 
 ## Docker version - 
 I have made dockerized versions of this application, based on Ubuntu 18.04 or Alpine Linux. 
+You can pull these images from DockerHub - 
+```bash 
+docker pull idan441/storage:alpine
+docker pull idan441/storage:ubuntu
+```
+DockerHub page for this project - https://hub.docker.com/r/idan441/storage 
+
+
+### Build the Docker images on you computer - 
 To build the image, download the repository and run the following command while in the directory itself - 
 ```bash
 docker build -t storage . #Will use the default Dockerfile which uses Alpine Linux. 
