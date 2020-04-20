@@ -1,10 +1,10 @@
 # Storage System - 
 The Storage System is a python application created with python3 using Flask. This application is made for use managing storage of small businesses and organization. The system can manage deposits and withdraws, track down storage and track users' actions. 
 ## The system includes - 
-*Multiple users environment, which tracks their actions on storage amounts. 
-*Organize the items according to location ( warehouse where they reside) and supplier. 
-*Make reports showing current storage, items movements, and traders orders. (suppliers and costumers)
-*Manage multiple traders, suppliers or costumer, giving the abillity to track their items movement. 
+* Multiple users environment, which tracks their actions on storage amounts. 
+* Organize the items according to location ( warehouse where they reside) and supplier. 
+* Make reports showing current storage, items movements, and traders orders. (suppliers and costumers)
+* Manage multiple traders, suppliers or costumer, giving the abillity to track their items movement. 
 
 This is my first python project. It uses Flask (with Jinja2) , python, HTML, CSS and more technologies. The data is stored in SQLite database. 
 
