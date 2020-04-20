@@ -9,11 +9,14 @@ The Storage System is a python application created with python3 using Flask. Thi
 This is my first python project. It uses Flask (with Jinja2) , python, HTML, CSS and more technologies. The data is stored in SQLite database. 
 
 
-### Short "how to" instructions of running the application - 
-The main application file's name is ```main.py```, the installation file is ```setup.py``` . Run it from the virtual environement to start the application. 
-Another way is by using a dockered version. I have made two Dockerfiles found in the directory - one is Ubuntu based and the other is Alpine based. You can build the docker images by running ```docker build .``` command from the directory. 
+### Short instructions about how to running the application - 
+The main application file's name is ```main.py```, the installation file is ```setup.py``` and must be executed first. Run both files from the virtual environement to start the application. 
+
+Another way to use this application is by using a dockered version. I have made two Dockerfiles found in the directory - one is Ubuntu based and the other is Alpine based. You can pull these images from DockerHub or build them yourself by running ```docker build .``` command from within the directory. 
+
 
 ## Images gallery - 
+Here are some pictures of the running application - 
 ![An example for a report showing movements of a specific item. ](./images-for-readme/report_by_item.png) 
 ![Storage report showing all items and their amounts. ](./images-for-readme/storage_report.png) 
 ![An example of a trader card in edit mode. ](./images-for-readme/trader_edit.png) 
