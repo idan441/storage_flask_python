@@ -10,21 +10,21 @@ conn = db_conn.db_conn()#Sets a connection to DB object.
 
 #Login and logout functions used by main page - 
 def login(username, password):
-	print(username, password)
-	print("SELECT u_id, d_name, is_active, is_admin FROM users WHERE u_name = '%s' AND password = '%s' " % (username, password))
 	username_details = conn.select_query_single_row("SELECT u_id, d_name, is_active, is_admin FROM users WHERE u_name = '%s' AND password = '%s' " % (username, password))
 	if(username_details == False): #If username and password were not found
-		logging.warn("wrong attempt to login - username %s , password %s " % (username, password) )
+		logging.warn("wrong attempt to login - username %s , password %s " % (str(username), str(password)) )
 		return False
 
 	#If login succeded - check if the user is active
 	if(username_details[2] == 0): #If is_active = 0 = false
+		logging.warn("An unactivated user tried to log in - username %s" % (str(username)) )
 		return False
 
 	#Else, start setting the sessions: 
 	session['u_id'] = username_details[0] #The user id which will be used in the db to relate the user to it's actions. 
 	session['d_name'] = username_details[1] #The name of the user, that will be presented in the rendered pages. 
 	session['is_admin'] = username_details[3] #For actions which requires admin premissions. 
+	logging.info("Login to the system - user %s" % (str(username)) )
 
 	return True
 

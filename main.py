@@ -420,7 +420,7 @@ def add_trader_page():
 		return redirect("/login/not_logged_in")
 
 	if(request.method == 'POST'): #Adding form was sent - then add the new trader
-		form_t_name = validate.is_trader(request.form["t_name"])
+		form_t_name = validate.sql_escape(request.form["t_name"])
 		form_contact_name = validate.sql_escape(request.form["contact_name"])
 		form_phone = validate.sql_escape(request.form["phone"])
 		form_address = validate.sql_escape(request.form["address"])
@@ -428,7 +428,7 @@ def add_trader_page():
 		form_is_active = validate.is_boolean(request.form["is_active"])
 		form_is_supplier = validate.is_boolean(request.form["is_supplier"])
 		form_is_costumer = validate.is_boolean(request.form["is_costumer"])
-		
+
 		new_trader_id = traders.add_trader(form_t_name, form_contact_name, form_phone, form_address, form_notes, form_is_active, form_is_supplier, form_is_costumer)
 		return redirect('/traders/edit/' + str(new_trader_id))
 

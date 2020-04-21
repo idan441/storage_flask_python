@@ -5,6 +5,7 @@ import translate
 conn = db_conn.db_conn() #Set the connection to the database, this will be used by the following functions. 
 
 def wh_list(): 
+	#Prints warehouse (wh) list. Also, it print hyper-links for editing these warehouses, and the form for adding a new warehouse to the system. 
 	results = conn.select_query("SELECT wh_id, wh_name, is_active FROM warehouses")
 	content = ""
 	
@@ -40,7 +41,7 @@ def wh_add(name, is_active):
 	return 1
 
 def wh_edit(wh_id):
-	#Adds a new warehouse to the warehuoses's list
+	#Prints warehouse(wh) edit form. 
 	result = conn.select_query_single_row("SELECT wh_id, wh_name, is_active FROM warehouses WHERE wh_id = %s" % (wh_id) )
 
 	content = '''<form method="post" action="/warehouse/update">

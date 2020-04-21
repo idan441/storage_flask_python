@@ -38,7 +38,7 @@ def is_boolean(input_string):
 conn = db_conn.db_conn() #Set the connection to the database, this will be used by the following functions. 
 
 def is_wh(input_string): 
-	#Checks if the string contains a warehuose(wh) ID, which exists in the datbase. 
+	#Checks if the string contains an existing warehuose(wh) ID, which exists in the datbase. 
 	if(conn.select_query_single_row("SELECT wh_id FROM warehouses WHERE wh_id=%s" % (is_number(input_string)))):
 		return input_string
 	else:
@@ -46,7 +46,7 @@ def is_wh(input_string):
 		exit("wrong value with wrong characters. See logging for more information. ")
 
 def is_user(input_string): 
-	#Checks if the string contains a warehuose(wh) ID, which exists in the datbase. 
+	#Checks if the string contains an existing user ID, which exists in the datbase. 
 	if(conn.select_query_single_row("SELECT u_id FROM users WHERE u_id=%s" % (is_number(input_string)))):
 		return input_string
 	else:
@@ -54,7 +54,7 @@ def is_user(input_string):
 		exit("wrong value with wrong characters. See logging for more information. ")
 
 def is_item(input_string): 
-	#Checks if the string contains a warehuose(wh) ID, which exists in the datbase. 
+	#Checks if the string contains an existing item ID, which exists in the datbase. 
 	if(conn.select_query_single_row("SELECT item_id FROM items WHERE item_id=%s" % (is_number(input_string)))):
 		return input_string
 	else:
@@ -62,7 +62,8 @@ def is_item(input_string):
 		exit("wrong value with wrong characters. See logging for more information. ")
 
 def is_trader(input_string): 
-	#Checks if the string contains a warehuose(wh) ID, which exists in the datbase. 
+	#Checks if the string contains an existing trader ID, which exists in the datbase. 
+	print(input_string)
 	if(conn.select_query_single_row("SELECT t_id FROM traders WHERE t_id=%s" % (is_number(input_string)))):
 		return input_string
 	else:
@@ -70,7 +71,7 @@ def is_trader(input_string):
 		exit("wrong value with wrong characters. See logging for more information. ")
 
 def is_transaction(input_string): 
-	#Checks if the string contains a warehuose(wh) ID, which exists in the datbase. 
+	#Checks if the string contains an transaction ID, which exists in the datbase. 
 	if(conn.select_query_single_row("SELECT transaction_id FROM transactions WHERE transaction_id=%s" % (is_number(input_string)))):
 		return input_string
 	else:
@@ -78,7 +79,7 @@ def is_transaction(input_string):
 		exit("wrong value with wrong characters. See logging for more information. ")
 
 def is_action(input_string): 
-	#Checks if the string contains a warehuose(wh) ID, which exists in the datbase. 
+	#Checks if the string contains an existing action ID, which exists in the datbase. 
 	if(conn.select_query_single_row("SELECT action_id FROM actions WHERE action_id=%s" % (is_number(input_string)))):
 		return input_string
 	else:

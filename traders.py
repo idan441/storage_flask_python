@@ -8,6 +8,7 @@ conn = db_conn.db_conn() #Set the connection to the database, this will be used 
 
 
 def traders_list(): 
+	#Prints traders list
 	results = conn.select_query("SELECT t_id, t_name, is_active, is_supplier, is_costumer FROM traders")
 	content = ""
 
@@ -26,6 +27,7 @@ def traders_list():
 	return content
 
 def add_trader_form():	
+	#Print a form for adding a new trader. The form redirect to an address which reffers to the add_trader() funciton below this function. 
 	content = '''<h3>Add a new trader: </h3>
 				<form method="post" action="/traders/add">
 					<table>
@@ -53,10 +55,12 @@ def add_trader_form():
 	return content
 
 def add_trader(t_name, contact_name, phone, address, notes, is_active, is_supplier, is_costumer):
+	#Add a new trader to the database and returns the new trader id. This function accepts infromation from the form add_trader_from() function above. 
 	new_trader_id = conn.insert_query("traders", ['t_name', 'contact_name', 'phone', 'address', 'notes', 'is_active', 'is_supplier', 'is_costumer'], [t_name, contact_name, phone, address, notes, is_active, is_supplier, is_costumer])
 	return new_trader_id
 
 def trader_edit(t_id):
+	#This function prints an edit form with the trader's details. (trader ID is needed - t_id)
 	result = conn.select_query_single_row("SELECT t_name, contact_name, phone, address, notes, is_active, is_supplier, is_costumer, t_id FROM traders WHERE t_id = %s" % (t_id) )
 
 	content = '''<form method="post" action="/traders/update">
@@ -111,7 +115,7 @@ def trader_edit(t_id):
 	return content
 
 def trader_update(t_id, t_name, contact_name, phone, address, notes, is_active, is_supplier, is_costumer):
-	#Adds a new warehouse to the warehuoses's list
+	#Updates an existing trader. This function is being called from main.py after sending the form generated from the funciton above. 
 	conn.execute_query("UPDATE traders SET t_name = '%s' , contact_name = '%s' , phone = '%s' , address = '%s' , notes = '%s' , is_active = '%s' , is_supplier = '%s' , is_costumer = '%s' WHERE t_id = '%s' " % (t_name, contact_name, phone, address, notes, is_active, is_supplier, is_costumer, t_id))
 	return 1
 

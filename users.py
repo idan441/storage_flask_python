@@ -36,12 +36,20 @@ def users_list():
 	return content
 
 def user_add(u_name, password, d_name):
-	#Adds a new warehouse to the warehuoses's list
+	#Adds a new user to the system. 
+
+	#In case the username already exists in DB - throw a message. 
+	if(conn.select_query_single_row(("SELECT u_name FROM users WHERE u_name = '%s'" % (u_name)))): 
+		return "New user wasn't created. Reason: Username ""%s"" already exists. Solution: Choose a different username. " % (u_name)
+	if(len(u_name) < 1 or len(password) < 1 or len(d_name) < 1): 
+		return "New user wasn't created. Reason: username, display name or password are too short! (Minimal length 1 charcters long. ) " 
+
+	#Else - create the account. 
 	conn.execute_query("INSERT INTO users (u_name, password, is_active, is_admin, d_name) VALUES ('%s','%s', 1, 0, '%s')" % (u_name, password, d_name))
 	return " new user added! "
 
 def user_edit(u_id):
-	#Adds a new warehouse to the warehuoses's list
+	#Prints edit user form - with the information of the user according to its ID. 
 	result = conn.select_query_single_row("SELECT u_id, u_name, is_active, is_admin, d_name FROM users WHERE u_id = %s" % (u_id) )
 
 	content = '''<form method="post" action="/users/update">
@@ -89,7 +97,7 @@ def user_edit(u_id):
 	return content
 
 def user_update(u_id, u_name, is_active, d_name):
-	#Adds a new warehouse to the warehuoses's list
+	#Updates user profile, this function is being called from main.py after the user edit form is sent. (This form is generated from the above function. ) 
 	conn.execute_query("UPDATE users SET u_name = '%s' , is_active = '%s' , d_name = '%s' WHERE u_id = '%s' " % (u_name, is_active, d_name, u_id))
 	return "user %s (%s, %s) updated!" % (d_name, u_name, u_id)
 
