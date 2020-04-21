@@ -12,7 +12,7 @@ This is my first python project. It uses Flask (with Jinja2) , python, HTML, CSS
 ### Short instructions about how to running the application - 
 The main application file's name is ```main.py```, the installation file is ```setup.py``` and must be executed first. Run both files from the virtual environement to start the application. 
 
-Another way to use this application is by using a dockered version. I have made two Dockerfiles found in the directory - one is Ubuntu based and the other is Alpine based. You can pull these images from DockerHub or build them yourself by running ```docker build .``` command from within the directory. 
+Another way to use this application is by using a dockerized version. I have made two Dockerfiles found in the directory - one is Ubuntu based and the other is Alpine based. You can pull these images from DockerHub or build them yourself by running ```docker build .``` command from within the directory. 
 
 
 ## Images gallery - 
@@ -53,13 +53,17 @@ docker run -d -p 5000:5000 storage #Detached mode, meaning that the docker conta
 Note - When build the up, docker will run the ```setup.py``` script which creates sets up the SQLite database and will setup the admin user. You can choose different username and password for the admin by editing the ```Dockerfile``` or by loging in to the application and changing the admin username and password, under users menu. 
 
 ### Mounting (Keeping) your data - ###
-In order to save your data, which includes the database file - you need to mount the file. This can be done while spinning up the docker container. In the following command the database directory will be save to a docker volume named db. When wishing to reload the data again, run the same docker command - this will put in the db file the database file from the former docker container instance. 
+In order to save your data, which includes the database file - you need to mount the file. This can be done while spinning up the docker container. In the following command the database directory will be saved to a docker volume named db. When wishing to reload the data again, run the same docker command - this will put in the db file the database file from the former docker container instance. 
 ```bash
 docker run -d -p 5000:5000 -v db:/app/db storage
+
+#If you want to inspect the volume created - 
+docker volume ls #Shows all volumes, along with the "db" volume. 
+docker inspect db #Inspect the db volume. 
 ```
 
 
-## How to install it on your local machine - 
+## How to run it on your local machine - 
 Here are the instructions on how to install and operate the project from your own machine. The instructions are for Linux distributions, though with fine guides from the web you can operate it from Windows too. Also, it is assumed you have python3 installed on your machine. 
 1. Download the repository. 
 2. Copy the application files to the desired location. 
@@ -104,4 +108,4 @@ Now you can enter to the specified address and start using the application!
 
 
 ### Backing up the database - 
-All data used by the application is saved in an SQLIte database file, named ```storage_db.db``` . If you wish to use the data in another machine, just copy this file to the application directory. ( And skip the setup process. ) 
+All data used by the application is saved in an SQLIte database file, named ```storage_db.db``` . If you wish to use the data in another machine, just copy this file to the application directory under the ```./db/``` directory. ( And skip the setup process. ) 

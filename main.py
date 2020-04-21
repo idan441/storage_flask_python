@@ -9,6 +9,7 @@ import login #Login module, which is up for logging and supplying user credentia
 import reports #Reports generating functions. 
 import traders #Traders functions
 import translate #Translate module includes transalaetion functions which translated numeric values to their meaning AND get functions related to other modules. 
+import validate #This includes validation functions to validate forms input. 
 
 #For generating a random string for the app.secret_key - import these two modules. 
 import random
@@ -90,13 +91,13 @@ def items_add__page():
 	if(request.method == 'GET'): #In case request method is GET, then lead to the creation form. 
 		return render_template('index.html', page_title="Add item: ", content=items.item_add_form() )
 	elif(request.method == 'POST'): #If request method is POST , then it means the form was sent - then add the item. 
-		form_item_name = request.form["item_name"]
-		form_amount = request.form["amount"]
-		form_m_unit = request.form["m_unit"]
-		form_price = request.form["price"]
-		form_supplier_id = request.form["supplier_id"]
-		form_warehouse_id = request.form["warehouse_id"]
-		form_notes = request.form["notes"]
+		form_item_name = validate.sql_escape(request.form["item_name"])
+		form_amount = validate.is_number(request.form["amount"])
+		form_m_unit = validate.sql_escape(request.form["m_unit"])
+		form_price = validate.is_number(request.form["price"])
+		form_supplier_id = validate.is_trader(request.form["supplier_id"])
+		form_warehouse_id = validate.is_wh(request.form["warehouse_id"])
+		form_notes = validate.sql_escape(request.form["notes"])
 
 		items.item_add(form_item_name, form_amount, form_m_unit, form_price, form_supplier_id, form_warehouse_id, form_notes)
 		return render_template('index.html', page_title="Edit item: ", message="New item was added successfully! ", content=items.items_list() )
@@ -107,14 +108,14 @@ def edit_item_page(item_id):
 
 @app.route('/items/edit', methods=['POST'])
 def update_item_page():
-	form_item_id = request.form["item_id"]
-	form_item_name = request.form["item_name"]
-	form_amount = request.form["amount"]
-	form_m_unit = request.form["m_unit"]
-	form_price = request.form["price"]
-	form_supplier_id = request.form["supplier_id"]
-	form_warehouse_id = request.form["warehouse_id"]
-	form_notes = request.form["notes"]
+	form_item_id = validate.is_item(request.form["item_id"])
+	form_item_name = validate.sql_escape(request.form["item_name"])
+	form_amount = validate.is_number(request.form["amount"])
+	form_m_unit = validate.sql_escape(request.form["m_unit"])
+	form_price = validate.is_number(request.form["price"])
+	form_supplier_id = validate.is_trader(request.form["supplier_id"])
+	form_warehouse_id = validate.is_wh(request.form["warehouse_id"])
+	form_notes = validate.sql_escape(request.form["notes"])
 	
 	is_success = items.item_update(form_item_id, form_item_name, form_amount, form_m_unit, form_price, form_supplier_id, form_warehouse_id, form_notes)
 	if(is_success):
@@ -153,7 +154,7 @@ def view_transaction_page(transaction_id):
 	if(int(translate.get_transaction_status(transaction_id)) in [1,2]): #OPen transaction, which has status created (1) or open (2) status - allows editing, so show them the edit forms. 
 		return redirect("/transactions/edit/" + str(transaction_id))
 
-	return render_template('index.html', page_title="View transaction: ", content=transactions.transaction_view(transaction_id) )
+	return render_template('index.html', page_title="View transaction: ", content=transactions.transaction_view(validate.is_transaction(transaction_id)) )
 
 @app.route('/transactions/edit/<transaction_id>')
 def edit_transaction_page(transaction_id):
@@ -162,7 +163,7 @@ def edit_transaction_page(transaction_id):
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 
-	if(int(translate.get_transaction_status(transaction_id)) in [3, 4, 5]): #Closed transactions cannot be edited - these have status close (3) , canceled (4) or deleted (5) - so reffer them to the view mode. 
+	if(int(translate.get_transaction_status(validate.is_transaction(transaction_id))) in [3, 4, 5]): #Closed transactions cannot be edited - these have status close (3) , canceled (4) or deleted (5) - so reffer them to the view mode. 
 		return redirect("/transactions/view/" + str(transaction_id))
 
 	#If information was sent from the form in this page, in order to update the transactino - then try to update it. 
@@ -180,12 +181,12 @@ def update_transaction_page():
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 	
-	form_transaction_id = request.form["transaction_id"]
-	form_title = request.form["title"]
-	form_reason = request.form["reason"]
-	form_transaction_type = request.form["transaction_type"]
-	form_trader_id = request.form["trader_id"]
-	form_notes = request.form["notes"]
+	form_transaction_id = validate.is_transaction(request.form["transaction_id"])
+	form_title = validate.sql_escape(request.form["title"])
+	form_reason = validate.sql_escape(request.form["reason"])
+	form_transaction_type = validate.is_number(request.form["transaction_type"])
+	form_trader_id = validate.is_trader(request.form["trader_id"])
+	form_notes = validate.sql_escape(request.form["notes"])
 	
 	is_success = transactions.transaction_update(form_transaction_id, form_title, form_reason, form_transaction_type, form_trader_id, form_notes)
 	return redirect('/transactions/edit/' + str(form_transaction_id))
@@ -199,7 +200,7 @@ def close_transaction_page(transaction_id):
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 
-	transactions.transaction_close(transaction_id)
+	transactions.transaction_close(validate.is_transaction(transaction_id))
 	return redirect('/transactions/view/' + str(transaction_id))
 
 @app.route('/transactions/open/<transaction_id>')
@@ -209,7 +210,7 @@ def open_transaction_page(transaction_id):
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 
-	transactions.transaction_open(transaction_id)
+	transactions.transaction_open(validate.is_transaction(transaction_id))
 	return redirect('/transactions/edit/' + str(transaction_id))
 
 @app.route('/transactions/cancel/<transaction_id>')
@@ -219,7 +220,7 @@ def cancel_transaction_page(transaction_id):
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 
-	transactions.transaction_cancel(transaction_id)
+	transactions.transaction_cancel(validate.is_transaction(transaction_id))
 	return redirect('/transactions/view/' + str(transaction_id))
 
 @app.route('/transactions/uncancel/<transaction_id>')
@@ -229,7 +230,7 @@ def uncancel_transaction_page(transaction_id):
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 
-	transactions.transaction_uncancel(transaction_id)
+	transactions.transaction_uncancel(validate.is_transaction(transaction_id))
 	return redirect('/transactions/edit/' + str(transaction_id))
 
 @app.route('/transactions/delete/<transaction_id>')
@@ -239,7 +240,7 @@ def delete_transaction_page(transaction_id):
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 
-	transactions.transaction_delete(transaction_id)
+	transactions.transaction_delete(validate.is_transaction(transaction_id))
 	return redirect('/transactions/view/' + str(transaction_id))
 
 @app.route('/transactions/undelete/<transaction_id>')
@@ -249,7 +250,7 @@ def undelete_transaction_page(transaction_id):
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 
-	transactions.transaction_undelete(transaction_id)
+	transactions.transaction_undelete(validate.is_transaction(transaction_id))
 	return redirect('/transactions/edit/' + str(transaction_id))
 
 
@@ -262,10 +263,10 @@ def add_action_page():
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 
-	form_transaction_id = request.form["transaction_id"]
-	form_item_id = request.form["item_id"]
-	form_amount = request.form["amount"]
-	form_notes = request.form["notes"]
+	form_transaction_id = validate.is_transaction(request.form["transaction_id"])
+	form_item_id = validate.is_item(request.form["item_id"])
+	form_amount = validate.is_number(request.form["amount"])
+	form_notes = validate.sql_escape(request.form["notes"])
 	transactions.add_action(form_transaction_id, form_item_id, form_amount, form_notes)
 	return redirect('/transactions/edit/' + str(form_transaction_id))
 
@@ -275,7 +276,7 @@ def edit_action_form_page(action_id):
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 
-	return render_template('index.html', page_title="Edit action: ", content=transactions.edit_action_form(action_id) )
+	return render_template('index.html', page_title="Edit action: ", content=transactions.edit_action_form(validate.is_action(action_id)) )
 
 @app.route('/actions/edit', methods=['POST'])
 def edit_action_page():
@@ -283,11 +284,11 @@ def edit_action_page():
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 
-	form_transaction_id = request.form["transaction_id"]
-	form_action_id = request.form["action_id"]
-	form_item_id = request.form["item_id"]
-	form_amount = request.form["amount"]
-	form_notes = request.form["notes"]
+	form_transaction_id = validate.is_transaction(request.form["transaction_id"])
+	form_action_id = validate.is_action(request.form["action_id"])
+	form_item_id = validate.is_item(request.form["item_id"])
+	form_amount = validate.is_number(request.form["amount"])
+	form_notes = validate.sql_escape(request.form["notes"])
 	transactions.edit_action(form_transaction_id, form_item_id, form_amount, form_notes)
 	return redirect('/transactions/edit/' + str(form_transaction_id))
 
@@ -300,7 +301,7 @@ def delete_action_page(action_id):
 		return redirect("/login/not_logged_in")
 
 	conn = db_conn.db_conn()
-	transaction_id_raw = conn.select_query_single_row("SELECT transaction_id FROM actions WHERE action_id = %s" % (action_id))
+	transaction_id_raw = conn.select_query_single_row("SELECT transaction_id FROM actions WHERE action_id = %s" % (validate.is_action(action_id)))
 	transaction_id = transaction_id_raw[0]
 
 	#delete the action - 
@@ -325,8 +326,8 @@ def add_warehouse_page():
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 
-	form_wh_name = request.form["wh_name"]
-	form_is_active = request.form["is_active"]
+	form_wh_name = validate.sql_escape(request.form["wh_name"])
+	form_is_active = validate.is_boolean(request.form["is_active"])
 	if(wh.wh_add(form_wh_name, form_is_active)):
 		return render_template('index.html', page_title="Warehouses list: " , message="Warehouse sucessfully added! " , content=wh.wh_list() )
 	return render_template('index.html', page_title="Warehouses list: " , warning="Error - Warehouse wasn't added! " , content=wh.wh_list() )
@@ -336,16 +337,16 @@ def edit_warehouse_page(wh_id):
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 
-	return render_template('index.html', page_title="Edit warehuose: " , content=wh.wh_edit(wh_id) )
+	return render_template('index.html', page_title="Edit warehuose: " , content=wh.wh_edit(validate.is_wh(wh_id)) )
 
 @app.route('/warehouse/update', methods = ['POST'])
 def update_warehouse_page():
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 
-	form_wh_id = request.form["wh_id"]
-	form_wh_name = request.form["wh_name"]
-	form_is_active = request.form["is_active"]
+	form_wh_id = validate.is_wh(request.form["wh_id"])
+	form_wh_name = validate.sql_escape(request.form["wh_name"])
+	form_is_active = validate.is_boolean(request.form["is_active"])
 	if(wh.wh_update(form_wh_id, form_wh_name, form_is_active)):
 		return render_template('index.html', page_title="Edit warehouse: " , message="Warehouse updated! " , content=wh.wh_edit(form_wh_id) )
 	return render_template('index.html', page_title="Edit warehouse: " , warning="Update failed! " , content=wh.wh_edit(form_wh_id) )
@@ -367,9 +368,9 @@ def add_user_page():
 	if(login.is_logged_in_admin() == 0):#Only logged in ADMIN users can view this page! 
 		return redirect("/login/not_admin")
 
-	form_u_name = request.form["u_name"]
-	form_password = request.form["password"]
-	form_d_name = request.form["d_name"]
+	form_u_name = validate.sql_escape(request.form["u_name"])
+	form_password = validate.sql_escape(request.form["password"])
+	form_d_name = validate.sql_escape(request.form["d_name"])
 	return render_template('index.html', page_title="Users list: " , message=users.user_add(form_u_name, form_password, form_d_name) , content=users.users_list() )
 
 @app.route('/users/edit/<u_id>')
@@ -377,7 +378,7 @@ def edit_user_page(u_id):
 	if(login.is_logged_in_admin() == 0):#Only logged in ADMIN users can view this page! 
 		return redirect("/login/not_admin")
 
-	return render_template('index.html', page_title="Edit user: " , content=users.user_edit(u_id) )
+	return render_template('index.html', page_title="Edit user: " , content=users.user_edit(validate.is_user(u_id)) )
 
 
 @app.route('/users/update', methods = ['POST'])
@@ -385,10 +386,10 @@ def update_user_page():
 	if(login.is_logged_in_admin() == 0):#Only logged in ADMIN users can view this page! 
 		return redirect("/login/not_admin")
 
-	form_u_id = request.form["u_id"]
-	form_u_name = request.form["u_name"]
-	form_d_name = request.form["d_name"]
-	form_is_active = request.form["is_active"]
+	form_u_id = validate.is_user(request.form["u_id"])
+	form_u_name = validate.sql_escape(request.form["u_name"])
+	form_d_name = validate.sql_escape(request.form["d_name"])
+	form_is_active = validate.is_boolean(request.form["is_active"])
 	return render_template('index.html', page_title="Edit user: " , message=users.user_update(form_u_id, form_u_name, form_is_active, form_d_name) , content=users.user_edit(form_u_id) )
 
 @app.route('/users/change_password', methods = ['POST'])
@@ -396,8 +397,8 @@ def change_user_password_page():
 	if(login.is_logged_in_admin() == 0):#Only logged in ADMIN users can view this page! 
 		return redirect("/login/not_admin")
 
-	form_u_id = request.form["u_id"]
-	form_new_password = request.form["new_password"]
+	form_u_id = validate.is_user(request.form["u_id"])
+	form_new_password = validate.sql_escape(request.form["new_password"])
 	if(users.user_change_password(form_u_id, form_new_password)):
 		return render_template('index.html', page_title="Edit user: " , message=" Password changed succesfully! " , content=users.user_edit(form_u_id) )
 	return render_template('index.html', page_title="Edit user: " , warning=" Password wasn't changed - please try again! " , content=users.user_edit(form_u_id) )
@@ -419,14 +420,14 @@ def add_trader_page():
 		return redirect("/login/not_logged_in")
 
 	if(request.method == 'POST'): #Adding form was sent - then add the new trader
-		form_t_name = request.form["t_name"]
-		form_contact_name = request.form["contact_name"]
-		form_phone = request.form["phone"]
-		form_address = request.form["address"]
-		form_notes = request.form["notes"]
-		form_is_active = request.form["is_active"]
-		form_is_supplier = request.form["is_supplier"]
-		form_is_costumer = request.form["is_costumer"]
+		form_t_name = validate.is_trader(request.form["t_name"])
+		form_contact_name = validate.sql_escape(request.form["contact_name"])
+		form_phone = validate.sql_escape(request.form["phone"])
+		form_address = validate.sql_escape(request.form["address"])
+		form_notes = validate.sql_escape(request.form["notes"])
+		form_is_active = validate.is_boolean(request.form["is_active"])
+		form_is_supplier = validate.is_boolean(request.form["is_supplier"])
+		form_is_costumer = validate.is_boolean(request.form["is_costumer"])
 		
 		new_trader_id = traders.add_trader(form_t_name, form_contact_name, form_phone, form_address, form_notes, form_is_active, form_is_supplier, form_is_costumer)
 		return redirect('/traders/edit/' + str(new_trader_id))
@@ -440,22 +441,22 @@ def edit_trader_page(t_id):
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 
-	return render_template('index.html', page_title="Edit trader: " , content=traders.trader_edit(t_id) )
+	return render_template('index.html', page_title="Edit trader: " , content=traders.trader_edit(validate.is_trader(t_id)) )
 
 @app.route('/traders/update', methods=['POST'])
 def update_trader_page():
 	if(login.is_logged_in() == 0):#Only logged in users can view this page! 
 		return redirect("/login/not_logged_in")
 
-	form_t_id = request.form["t_id"]
-	form_t_name = request.form["t_name"]
-	form_contact_name = request.form["contact_name"]
-	form_phone = request.form["phone"]
-	form_address = request.form["address"]
-	form_notes = request.form["notes"]
-	form_is_active = request.form["is_active"]
-	form_is_supplier = request.form["is_supplier"]
-	form_is_costumer = request.form["is_costumer"]
+	form_t_id = validate.is_trader(request.form["t_id"])
+	form_t_name = validate.sql_escape(request.form["t_name"])
+	form_contact_name = validate.sql_escape(request.form["contact_name"])
+	form_phone = validate.sql_escape(request.form["phone"])
+	form_address = validate.sql_escape(request.form["address"])
+	form_notes = validate.sql_escape(request.form["notes"])
+	form_is_active = validate.is_boolean(request.form["is_active"])
+	form_is_supplier = validate.is_boolean(request.form["is_supplier"])
+	form_is_costumer = validate.is_boolean(request.form["is_costumer"])
 	
 	is_success = traders.trader_update(form_t_id, form_t_name, form_contact_name, form_phone, form_address, form_notes, form_is_active, form_is_supplier, form_is_costumer)
 	if(is_success):
@@ -487,7 +488,7 @@ def report_transactions_by_trader_page():
 		return redirect("/login/not_logged_in")
 
 	if(request.args.get("t_id") != None): #If the form was sent - generate the report: 
-		t_id = request.args.get('t_id')
+		t_id = validate.is_trader(request.args.get('t_id'))
 		return render_template('index.html', page_title="Transactions by trader report: ", content=reports.transactions_by_trader_report(t_id) )
 	#Else show the form - 
 	return render_template('index.html', page_title="Transactions by trader report: ", content=reports.transactions_by_trader_report_form() )
@@ -498,7 +499,7 @@ def report_transactions_by_item_page():
 		return redirect("/login/not_logged_in")
 
 	if(request.args.get("i_id") != None): #If the form was sent - generate the report: 
-		i_id = request.args.get('i_id')
+		i_id = validate.is_item(request.args.get('i_id'))
 		return render_template('index.html', page_title="Transactions by item report: ", content=reports.transactions_by_item_report(i_id) )
 	#Else show the form - 
 	return render_template('index.html', page_title="Transactions by item report: ", content=reports.transactions_by_item_report_form() )

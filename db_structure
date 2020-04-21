@@ -9,13 +9,6 @@ Items - V
 	warehouse_id
 	notes
 
-Storage - TO BE ADD IN FUTURE
-	storage_id
-	item_id
-	warehouse_id
-	amount
-	last_update_date
-
 warehouses - V
 	wh_id
 	wh_name
@@ -35,8 +28,6 @@ actions -
 	user_id
 	transaction_id
 	amount
-	warehouse_id - NOT TO ADD! 
-	storage_id - TO ADD IN FUTURE... 
 	notes
  
 transactions - 
