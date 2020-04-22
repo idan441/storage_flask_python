@@ -1,0 +1,8 @@
+.gitignore
+.git/
+.dockerignore
+__pycache/
+env/
+db/storage_db.db
+/image-for-reamde
+README.md
