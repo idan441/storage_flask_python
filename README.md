@@ -52,7 +52,7 @@ docker run -d -p 5000:5000 storage #Detached mode, meaning that the docker conta
 
 Note - When build the up, docker will run the ```setup.py``` script which creates sets up the SQLite database and will setup the admin user. You can choose different username and password for the admin by editing the ```Dockerfile``` or by loging in to the application and changing the admin username and password, under users menu. 
 
-### Mounting (Keeping) your data - ###
+### Mounting (Keeping) your data while using docker - ###
 In order to save your data, which includes the database file - you need to mount the file. This can be done while spinning up the docker container. In the following command the database directory will be saved to a docker volume named db. When wishing to reload the data again, run the same docker command - this will put in the db file the database file from the former docker container instance. 
 ```bash
 docker run -d -p 5000:5000 -v db:/app/db storage
@@ -106,6 +106,36 @@ $ python3 main.py
 
 Now you can enter to the specified address and start using the application! 
 
+### What is virtual environment (venv) in Python? 
+While studying and making this application, I had to use virtual environment (venv) . I listed all explanations on how to use venv and its uses in a file named ```venv-instructions.md``` . Feel free to read this file if you need more explanations, without relation to my application. 
+
+
+### Environment variables - 
+The following variables can be modified by defining them as environment variables. Environment variables are variables defined in the terminal session, and can be accessed from the application itself. 
+
+These varibales can be set, resulting effects on the application's default configurations - 
+* PORT - this will choose the port which the application will run. ( If not defined, default is 5000 ) 
+* DB_ADDRESS - this will show the path to create/load the SQLite database. The path should include the file name and the extension. ( For example, "/mydir/mydb.db" . Default is ./db/storage_db.db) Note that if the database doesn't exist in the specified path then the application will automatically generate a database with the given name! 
+* HOST - defining the IP range which the Flask server will serve. ( Default 0.0.0.0 ) 
+* DEBUG - whether the sever should run in debug mode. ( True/False, Default - False. IT IS CASE-SENSITIVE! ) 
+
+To set up an environment variable in a Linux terminal just use the following command - 
+```bash
+export VAR_NAME=VALUE
+export PORT=4000 #For example, this will set up an environment port and assign it the value of 4000 , which the application will run on. 
+``` 
+Remember that in Linux terminal environment variables must be upper-case. Also, remember that when ending the terminal session all environment variables are set-off. ( Meaning that in the next time you will have to assign them again. ) 
+
+If using a dockerized version of the application, you can set up an environment variable by the following command to the Dockerfile - 
+```
+ENV ENV_NAME=VALUE
+ENV ENV_NAME VALUE #Another way of writing this commands. Same result! 
+``` 
+Remember - when dockerizing with linux OS , you still need to user upper-case letters for the environment variables. 
+
+
 
 ### Backing up the database - 
-All data used by the application is saved in an SQLIte database file, named ```storage_db.db``` . If you wish to use the data in another machine, just copy this file to the application directory under the ```./db/``` directory. ( And skip the setup process. ) 
+All data used by the application is saved in an SQLite database file, named ```storage_db.db``` . If you wish to use the data in another machine, just copy this file to the application directory under the ```./db/``` directory. ( And skip the setup process. ) 
+
+

@@ -4,16 +4,16 @@ import sqlite3 #import sqlite connection module fro python
 from sqlite3 import Error #import the error module, used in the create_conn function
 
 import logging #For the abillity to add logs in the terminal
-
+import os #Allows access to environment variables. This is used to set the SQLite database file address. 
 
 class db_conn: 
 
-	conn = sqlite3.connect(r'./db/storage_db.db', check_same_thread=False)
+	conn = sqlite3.connect(os.environ.get('ADDRESS', './db/storage_db.db'), check_same_thread=False)
 
 	def open_conn(self):
 		#Connects to the database, if fails then abort the software. 
 		try:
-			self.conn = sqlite3.connect('./db/storage_db.db', check_same_thread=False)
+			self.conn = sqlite3.connect(os.environ.get('ADDRESS', './db/storage_db.db'), check_same_thread=False)
 		except Error as e:
 			logging.error("connection to the sqlite failed! ")
 			print(e)

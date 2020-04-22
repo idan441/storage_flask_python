@@ -1,4 +1,4 @@
-#How to use virtual environment (venv) ? 
+# How to use virtual environment (venv) ? 
 
 ## What is a python virtual environment in python? 
 When running a python script on your machine, there is a godo chance that you are going to use some pakcages or a specific python version. (python2 or python3 for example, or python 3.6 vs. python 3.7. ) Problem is when you send this project to a friend - and he tries to launch it from his computer, which has different version of python or the packages. 

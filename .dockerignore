@@ -1,6 +1,7 @@
 .gitignore
 .git/
 .dockerignore
+.Dockerfile*
 __pycache/
 env/
 db/storage_db.db

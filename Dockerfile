@@ -18,6 +18,7 @@ USER storage_user
 
 #Install the application, put here the admin user details: python3 setup.py <username> <display_name> <password>
 RUN python3 setup.py admin MyName 1234
+
 EXPOSE 5000 
 
 ENTRYPOINT ["python3"]
