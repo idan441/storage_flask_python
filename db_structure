@@ -1,5 +1,9 @@
-Storage application db scheme - db is SQLite 
-Items - V
+# Storage application db scheme - db is SQLite 
+This is a basic list of the tables and structure of the SQLite database used for this application. The CREATE SQL queries are listed in the "setup.py" file. 
+
+
+## Tables: 
+Items - 
 	item_id
 	item_name
   	amount
@@ -9,12 +13,12 @@ Items - V
 	warehouse_id
 	notes
 
-warehouses - V
+warehouses - 
 	wh_id
 	wh_name
 	is_active
 
-users - V
+users - 
 	u_id
 	d_name #display name
 	u_name #For login form
