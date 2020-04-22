@@ -129,7 +129,7 @@ Remember that in Linux terminal environment variables must be upper-case. Also, 
 If using a dockerized version of the application, you can set up an environment variable by the following command to the Dockerfile - 
 ```
 ENV ENV_NAME=VALUE
-ENV ENV_NAME VALUE #Another way of writing this commands. Same result! 
+ENV ENV_NAME VALUE #Another way of writing this command. 
 ``` 
 Remember - when dockerizing with linux OS , you still need to user upper-case letters for the environment variables. 
 

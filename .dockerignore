@@ -1,9 +1,18 @@
+#Git and venv files - 
 .gitignore
 .git/
+__pycache__/
+env/
+
+#Docker files - 
 .dockerignore
 .Dockerfile*
-__pycache/
-env/
-db/storage_db.db
-/image-for-reamde
+
+#DB file - 
+db/*.db
+
+#Other files not to be included - 
+/images-for-readme
 README.md
+db_structure
+vev-instructions.md
